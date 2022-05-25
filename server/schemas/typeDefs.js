@@ -1,29 +1,36 @@
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
+
   type User {
-    _id: ID
-    username: String
+    id: ID!
+    firstName: String
+    lastName: String
+    email: String!
+    password: String!
+    propertyName: String
+    companyName: String
+    phoneNumber: String
+    properties: [Property]
+  }
+
+  type Tenant {
+    id: ID
+    firstName: String!
+    lastName: String!
+    propertyName: String!
     email: String
-    friendCount: Int
-    thoughts: [Thought]
-    friends: [User]
+    password: String
+    user: [User]
   }
 
-  type Thought {
-    _id: ID
-    thoughtText: String
-    createdAt: String
-    username: String
-    reactionCount: Int
-    reactions: [Reaction]
-  }
-
-  type Reaction {
-    _id: ID
-    reactionBody: String
-    createdAt: String
-    username: String
+  type Property {
+    id: ID
+    address: String
+    city: String
+    state: String
+    zip: Int
+    user: [User]
   }
 
   type Auth {
@@ -33,18 +40,48 @@ const typeDefs = gql`
 
   type Query {
     me: User
-    users: [User]
-    user(username: String!): User
-    thoughts(username: String): [Thought]
-    thought(_id: ID!): Thought
+    getUsers: [User]
+    getUser(id: ID!): User
+    getTenants(email: String): [Tenant]
+    getTenant(id: ID!): Tenant!
+    getProperties: [Property!]
+    getProperty(id: ID!): Property!
   }
 
   type Mutation {
-    login(email: String!, password: String!): Auth
-    addUser(username: String!, email: String!, password: String!): Auth
-    addThought(thoughtText: String!): Thought
-    addReaction(thoughtId: ID!, reactionBody: String!): Thought
-    addFriend(friendId: ID!): User
+
+    addUser(
+      firstName: String!
+      lastName: String!
+      email: String!
+      password: String!
+      propertyName: String
+      companyName: String
+      phoneNumber: String
+    ): Auth
+
+    addTenant(
+      firstName: String!
+      lastName: String!
+      propertyName: String!
+      email: String!
+      password: String!
+    ): Tenant
+
+    addProperty(
+      address: String!
+      city: String!
+      state: String!
+      zip: Int!
+      userId: ID!
+    ): Property
+
+    login(email: String!, password: String!): Auth!
+
+    deleteProperty(id: ID!): Property!
+    deleteUser(id: ID!): User!
+    deleteTenant(id: ID!): Tenant!
+    
   }
 `;
 
