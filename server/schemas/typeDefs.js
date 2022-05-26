@@ -8,20 +8,14 @@ const typeDefs = gql`
     lastName: String
     email: String!
     password: String!
-    propertyName: String
-    companyName: String
     phoneNumber: String
+    role: Role!
     properties: [Property]
   }
 
-  type Tenant {
-    id: ID
-    firstName: String!
-    lastName: String!
-    propertyName: String!
-    email: String
-    password: String
-    user: [User]
+  enum Role {
+    OWNER
+    TENANT
   }
 
   type Property {
@@ -30,7 +24,8 @@ const typeDefs = gql`
     city: String
     state: String
     zip: Int
-    user: [User]
+    owner: User
+    tenant: User
   }
 
   type Auth {
@@ -41,10 +36,8 @@ const typeDefs = gql`
   type Query {
     me: User
     getUsers: [User]
-    getUser(id: ID!): User
-    getTenants(email: String): [Tenant]
-    getTenant(id: ID!): Tenant!
-    getProperties: [Property!]
+    getUser(_id: ID!): User
+    getProperties: [Property]
     getProperty(id: ID!): Property!
   }
 
@@ -54,33 +47,26 @@ const typeDefs = gql`
       firstName: String!
       lastName: String!
       email: String!
-      password: String!
-      propertyName: String
-      companyName: String
       phoneNumber: String
-    ): Auth
-
-    addTenant(
-      firstName: String!
-      lastName: String!
-      propertyName: String!
-      email: String!
       password: String!
-    ): Tenant
+      role: Role!
+    ): Auth
 
     addProperty(
       address: String!
       city: String!
       state: String!
       zip: Int!
-      userId: ID!
+    ): Property
+
+    attachTenant(
+      propertyId: ID!
     ): Property
 
     login(email: String!, password: String!): Auth!
 
     deleteProperty(id: ID!): Property!
     deleteUser(id: ID!): User!
-    deleteTenant(id: ID!): Tenant!
     
   }
 `;

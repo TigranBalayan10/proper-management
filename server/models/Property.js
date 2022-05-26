@@ -22,15 +22,15 @@ const propertySchema = new Schema(
             required: true,
             trim: true
         },
-        tenant: {
+        owner: {
             type: Schema.Types.ObjectId,
-            ref: 'Tenant'
+            ref: 'User'
         },
-        user: {
+        tenant: {
             type: Schema.Types.ObjectId,
             ref: 'User'
         }
-    },
+    }
 )
 
 module.exports = model("Property", propertySchema);

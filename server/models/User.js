@@ -20,32 +20,30 @@ const userSchema = new Schema(
       unique: true,
       match: [/.+@.+\..+/, 'Must match an email address!']
     },
-    password: {
-      type: String,
-      required: true,
-      minlength: 5
-    },
-    propertyName: {
-      type: String,
-      required: true,
-      trim: true
-    },
-    companyName: {
-      type: String,
-      required: true,
-      trim: true
-    },
     phoneNumber: {
       type: String,
       required: true,
       trim: true
     },
-    properties: {
-      type: [Schema.Types.ObjectId],
-      ref: 'Property'
-    }
+    password: {
+      type: String,
+      required: true,
+      minlength: 8
+    },
+    role: {
+      type: String,
+      required: true,
+      enum: ['OWNER', 'TENANT']
+    },
+    // if owner can add a property from the dashboard
+    properties: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Property'
+      }
+    ]
   }
-);
+)
 
 // set up pre-save middleware to create password
 userSchema.pre('save', async function (next) {

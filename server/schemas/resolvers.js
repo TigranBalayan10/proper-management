@@ -1,4 +1,4 @@
-const { Tenant, User, Property } = require('../models');
+const { User, Property } = require('../models');
 const { AuthenticationError } = require('apollo-server-express');
 const { signToken } = require('../utils/auth');
 
@@ -8,38 +8,45 @@ const resolvers = {
       console.log('context', context.user);
       if (context.user) {
         const userData = await User.findOne({ _id: context.user._id })
+          .populate('properties')
 
         return userData;
       }
       throw new AuthenticationError('You must be logged in to view this data');
 
     },
+
     getProperties: async (parent, args, context) => {
-      console.log(context.user._id)
-      const properties = await Property.find({ user: context.user._id });
-      return properties;
+      if (context.user) {
+        console.log(context.user._id);
+        const properties = await Property.find({
+          $or: [
+            { owner: context.user._id },
+            { tenant: context.user._id }
+          ]
+        })
+        .populate(['owner', 'tenant'])
+        console.log(properties);
+        return properties;
+      }
+
+      throw new AuthenticationError('You must be logged in to view this data');
     },
+
     getProperty: async (parent, { id }) => {
-      const property = await Property.findById(id);
+      const property = await Property.findOne({ _id: id })
       return property;
     },
-    getTenants: async (parent, args) => {
-      const tenants = await Tenant.find({});
-      return tenants;
-    },
-    getTenant: async (parent, { id }) => {
-      const tenant = await Tenant.findById(id);
-      return tenant;
-    },
-    getUsers: async (parent, args, { email }) => {
+
+    getUsers: async (parent, args) => {
       const users = await User.find()
         .select('-__v -password')
       return users;
     },
+
     getUser: async (parent, { id }) => {
       return User.findOne({ id })
         .select('-__v -password')
-        .populate('properties');
     }
   },
 
@@ -70,26 +77,10 @@ const resolvers = {
       return { token, user };
     },
 
-    addTenant: async (parent, args, context) => {
-      if (context.user) {
-        const tenant = await Tenant.create({ ...args });
-
-        await Property.findByIdAndUpdate(
-          { _id: context.user._id },
-          { $set: { tenant: tenant._id } },
-          { new: true }
-        );
-
-        return tenant;
-      }
-
-      throw new AuthenticationError('You need to be logged in!');
-    },
-
     addProperty: async (parent, args, context) => {
       if (context.user) {
-        const property = await Property.create({ ...args, user: context.user._id }); 
-        
+        const property = await Property.create({ ...args, owner: context.user._id });
+
         await User.findByIdAndUpdate(
           { _id: context.user._id },
           { $push: { properties: property._id } },
@@ -100,6 +91,30 @@ const resolvers = {
       }
 
       throw new AuthenticationError('You need to be logged in!');
+    },
+
+    attachTenant: async (parent, { propertyId }, context) => {
+      if (context.user) {
+        const property = await Property.findOneAndUpdate(
+          { _id: propertyId },
+          { $set: { tenant: context.user._id } },
+          { new: true }
+        );
+
+        return property;
+      }
+
+      throw new AuthenticationError('You need to be logged in!');
+    },
+
+    deleteProperty: async (parent, { id }) => {
+      const property = await Property.findByIdAndDelete(id);
+      return property;
+    },
+
+    deleteUser: async (parent, { id }) => {
+      const user = await User.findByIdAndDelete(id);
+      return user;
     }
   }
 };
