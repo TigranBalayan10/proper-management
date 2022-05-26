@@ -1,10 +1,12 @@
+const User = require('../models/User');
+
 const jwt = require('jsonwebtoken');
 
 const secret = 'mysecretsshhhhh';
 const expiration = '22h';
 
 module.exports = {
-  authMiddleware: function({ req }) {
+  authMiddleware: async function({ req }) {
     // allows token to be sent via req.body, req.query, or headers
     let token = req.body.token || req.query.token || req.headers.authorization;
 
@@ -23,7 +25,8 @@ module.exports = {
     try {
       const { data } = jwt.verify(token, secret, { maxAge: expiration });
       req.user = data;
-    } catch {
+      req.identity = await User.findById(data._id);
+    } catch(err) {
       console.log('Invalid token');
     }
 

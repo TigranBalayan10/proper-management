@@ -7,6 +7,11 @@ const propertySchema = new Schema(
             required: true,
             trim: true
         },
+        numberOfApartments: {
+            type: Number,
+            required: true,
+            trim: true
+        },
         city: {
             type: String,
             required: true,
@@ -23,10 +28,6 @@ const propertySchema = new Schema(
             trim: true
         },
         owner: {
-            type: Schema.Types.ObjectId,
-            ref: 'User'
-        },
-        tenant: {
             type: Schema.Types.ObjectId,
             ref: 'User'
         }

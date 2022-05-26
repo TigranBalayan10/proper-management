@@ -1,4 +1,4 @@
-const { User, Property } = require('../models');
+const { User, Property, Apartment } = require('../models');
 const { AuthenticationError } = require('apollo-server-express');
 const { signToken } = require('../utils/auth');
 
@@ -19,13 +19,9 @@ const resolvers = {
     getProperties: async (parent, args, context) => {
       if (context.user) {
         console.log(context.user._id);
-        const properties = await Property.find({
-          $or: [
-            { owner: context.user._id },
-            { tenant: context.user._id }
-          ]
-        })
-        .populate(['owner', 'tenant'])
+        const match = context.user.roll === 'OWNER' ? { owner: context.user._id } : {};
+        const properties = await Property.find(match)
+        .populate(['owner'])
         console.log(properties);
         return properties;
       }
@@ -36,6 +32,12 @@ const resolvers = {
     getProperty: async (parent, { id }) => {
       const property = await Property.findOne({ _id: id })
       return property;
+    },
+
+    getApartments: async(parent, args, context) => {
+      const apartments = await Apartment.find({property: args.propertyId})
+      .populate(['tenant'])
+      return apartments;
     },
 
     getUsers: async (parent, args) => {
@@ -78,14 +80,16 @@ const resolvers = {
     },
 
     addProperty: async (parent, args, context) => {
-      if (context.user) {
+      console.log(context);
+      if (context.identity?.role === 'OWNER') {
         const property = await Property.create({ ...args, owner: context.user._id });
 
-        await User.findByIdAndUpdate(
-          { _id: context.user._id },
-          { $push: { properties: property._id } },
-          { new: true }
-        );
+        for(let i = 1; i <= args.numberOfApartments; i++) {
+          await Apartment.create({
+            number: i,
+            property: property._id
+          })
+        }
 
         return property;
       }
@@ -93,15 +97,15 @@ const resolvers = {
       throw new AuthenticationError('You need to be logged in!');
     },
 
-    attachTenant: async (parent, { propertyId }, context) => {
-      if (context.user) {
-        const property = await Property.findOneAndUpdate(
-          { _id: propertyId },
+    attachTenant: async (parent, { apartmentId }, context) => {
+      if (context.user && context.identity.role === 'TENANT') {
+        const apartment = await Apartment.findOneAndUpdate(
+          { _id: apartmentId, tenant: null },
           { $set: { tenant: context.user._id } },
           { new: true }
         );
 
-        return property;
+        return apartment;
       }
 
       throw new AuthenticationError('You need to be logged in!');
