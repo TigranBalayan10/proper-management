@@ -1,8 +1,62 @@
-import React from "react";
+import React, { useState } from "react";
 import "../index.css";
-import { input, label, button } from "../style";
+import { button } from "../style";
+import AddProperty from "./AddProperty";
 
 const CompanyDashboard = () => {
+  const [addProperty, setAddProperty] = useState(false);
+
+  const addPropertyHandler = () => {
+    setAddProperty(!addProperty);
+  };
+
+  const properties = [
+    {
+      id: 1,
+      name: "Broadway Estate",
+      street: "123 Main St",
+      city: "New York",
+      state: "NY",
+      zip: "10001",
+      tenant: [
+        {
+          id: 1,
+          name: "John Doe",
+        },
+        {
+          id: 2,
+          name: "Jane Doe",
+        },
+        {
+          id: 3,
+          name: "Jack Doe",
+        },
+      ],
+    },
+    {
+      id: 2,
+      name: "California Estate",
+      street: "123 Main St",
+      city: "New York",
+      state: "NY",
+      zip: "10001",
+      tenant: [
+        {
+          id: 1,
+          name: "John Doe",
+        },
+        {
+          id: 2,
+          name: "Jane Doe",
+        },
+        {
+          id: 3,
+          name: "Jack Doe",
+        },
+      ],
+    },
+  ];
+
   return (
     <>
       <div className="w-full py-28">
@@ -17,7 +71,7 @@ const CompanyDashboard = () => {
               <div className="w-full lg:w-1/3 px-12 flex flex-col items-center py-10">
                 <div className="w-24 h-24 mb-3 p-2 rounded-full flex items-center justify-center">
                   <img
-                    src="../public/Avatar.svg"
+                    src={require("../Media/Avatar.svg").default}
                     alt="Avatar"
                     className="w-full h-full overflow-hidden object-cover rounded-full"
                   />
@@ -48,7 +102,7 @@ const CompanyDashboard = () => {
                       Properties
                     </p>
                   </div>
-                  <div className>
+                  <div className="mb-5">
                     <h2 className="text-gray-300 dark:text-gray-100 text-2xl leading-6 mb-2 text-center">
                       3
                     </h2>
@@ -57,54 +111,33 @@ const CompanyDashboard = () => {
                     </p>
                   </div>
                 </div>
-                <div className="relative z-0 w-full mb-6 mt-5 group">
-                  <input
-                    type="text"
-                    name="floating_password"
-                    id="floating_password"
-                    className={input}
-                    placeholder=" "
-                    required=""
-                  ></input>
-                  <label className={label}>Add a Property</label>
-                </div>
-                <button type="submit" className={button}>
-                  + Add
+                <button
+                  type="submit"
+                  className={button}
+                  onClick={addPropertyHandler}
+                >
+                  Add Property
                 </button>
+                {addProperty ? <AddProperty /> : null}
               </div>
               <div className="w-full lg:w-1/3 px-12 border-t border-b lg:border-t-0 lg:border-b-0 lg:border-l lg:border-r border-gray-300 flex flex-col items-center py-10">
                 <h2 className="text-2xl text-gray-300 mb-3">Tenants</h2>
-                <tr class=" border-b text-gray-300 cursor-pointer">
-                  <th
-                    scope="row"
-                    class="px-6 py-2 font-medium whitespace-nowrap"
-                  >
-                    John Smith
-                  </th>
-                  <td class="px-6 py-2">Broadway Building</td>
-                </tr>
+
+                <tr class=" border-b text-gray-300 cursor-pointer"></tr>
               </div>
               <div className="w-full lg:w-1/3 px-12 text-gray-300  border-gray-300 flex flex-col items-center py-10">
                 <h1 className="text-2xl">Properties</h1>
-
-                <div class="block p-6 max-w-sm rounded-lg shadow-2xl  dark:bg-gray-800">
-                  <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-300 mt-2">
-                    Broadway Building
-                  </h5>
-                  <p class="font-normal text-gray-300 dark:text-gray-400">
-                    100 Main str. apt. 107 <br />
-                    New York, NY 10001 <br />
-                  </p>
-                </div>
-                <div class="block p-6 max-w-sm rounded-lg shadow-2xl  dark:bg-gray-800">
-                  <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-300 mt-2">
-                    Broadway Building
-                  </h5>
-                  <p class="font-normal text-gray-300 dark:text-gray-400">
-                    100 Main str. apt. 107 <br />
-                    New York, NY 10001 <br />
-                  </p>
-                </div>
+                {properties.map((property) => (
+                  <div class="block p-6 max-w-sm rounded-lg shadow-2xl  dark:bg-gray-800" key={property.id}>
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-300 mt-2">
+                      {property.name}
+                    </h5>
+                    <p class="font-normal text-gray-300 dark:text-gray-400">
+                      {property.street} <br />
+                      {property.city}, {property.state} {property.zip}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
             {/* Card code block end */}

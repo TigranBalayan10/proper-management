@@ -79,14 +79,14 @@ const TenantDashboard = () => {
                 </div>
                 <label
                   for="message"
-                  class="block mb-2 text-xl font-medium text-gray-300 dark:text-gray-400"
+                  className="block mb-2 text-xl font-medium text-gray-300 dark:text-gray-400"
                 >
                   More Info
                 </label>
                 <textarea
                   id="message"
                   rows="4"
-                  class="block p-2.5 w-full text-sm text-gray-900 bg-gray-200 rounded-lg border-1 border-yellow-600 focus:ring-yellow-500 focus:border-yellow-500 mb-4"
+                  className="block p-2.5 w-full text-sm text-gray-900 bg-gray-200 rounded-lg border-1 border-yellow-600 focus:ring-yellow-500 focus:border-yellow-500 mb-4"
                   placeholder="Your message..."
                 ></textarea>
                 <button type="submit" className={button}>
@@ -97,14 +97,14 @@ const TenantDashboard = () => {
                 <h2 className="text-2xl text-gray-300 mb-3">Feedback</h2>
                 <label
                   for="message"
-                  class="block mb-2 text-xl font-medium text-gray-300 dark:text-gray-400"
+                  className="block mb-2 text-xl font-medium text-gray-300 dark:text-gray-400"
                 >
                   Your message
                 </label>
                 <textarea
                   id="message"
                   rows="7"
-                  class="block p-2.5 w-full text-sm text-gray-900 bg-gray-200 rounded-lg border-1 border-yellow-600 focus:ring-yellow-500 focus:border-yellow-500 mb-4"
+                  className="block p-2.5 w-full text-sm text-gray-900 bg-gray-200 rounded-lg border-1 border-yellow-600 focus:ring-yellow-500 focus:border-yellow-500 mb-4"
                   placeholder="Your message..."
                 ></textarea>
                 <button type="submit" className={button}>

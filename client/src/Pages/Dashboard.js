@@ -6,8 +6,8 @@ import "../index.css";
 const Dashboard = () => {
   return (
     <>
-      <CompanyDashboard />
-      {/* <TenantDashboard /> */}
+      {/* <CompanyDashboard /> */}
+      <TenantDashboard />
     </>
   );
 };

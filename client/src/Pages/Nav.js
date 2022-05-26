@@ -13,12 +13,8 @@ function Nav() {
       path: "/contact",
     },
     {
-      name: "Company Login",
+      name: "Login",
       path: "/login",
-    },
-    {
-      name: "Tenant Login",
-      path: "/login-tenant",
     },
     {
       name: "Signup",
@@ -36,12 +32,21 @@ function Nav() {
     <div className="shadow-md w-full fixed top-0 left-0">
       <div className="md:flex items-center justify-between py-4 md:px-10 px-7" id="nav">
         <div className="font-bold text-2xl cursor-pointer flex items-center text-gray-800">
-          {" "}
+        <Link to="/">
+            <img
+              src={require("../Media/Logo.svg").default}
+              alt="logo"
+              className="w-14 mr-5"
+            />
+          </Link>
           <Link
             to="/"
             className="font-semibold text-2xl tracking-tight text-white"
           >
-            Property Management
+            <p>
+              Proper Management <br />
+              <p className="text-sm">Making management easy </p>
+              </p>
           </Link>
         </div>
         <div
