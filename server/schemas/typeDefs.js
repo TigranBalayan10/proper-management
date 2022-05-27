@@ -73,9 +73,6 @@ const typeDefs = gql`
     ): Apartment
 
     login(email: String!, password: String!): Auth!
-
-    deleteProperty(id: ID!): Property!
-    deleteUser(id: ID!): User!
     
   }
 `;
