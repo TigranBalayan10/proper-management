@@ -19,11 +19,7 @@ function Nav() {
     {
       name: "Signup",
       path: "/signup",
-    },
-    {
-      name: "Dashboard",
-      path: "/dashboard",
-    },
+    }
   ];
 
   let [open, setOpen] = useState(false);

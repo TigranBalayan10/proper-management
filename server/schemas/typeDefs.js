@@ -72,7 +72,7 @@ const typeDefs = gql`
       apartmentId: ID!
     ): Apartment
 
-    login(email: String!, password: String!): Auth!
+    login(email: String!, password: String!, role: Role!): Auth!
 
     deleteProperty(id: ID!): Property!
     deleteUser(id: ID!): User!

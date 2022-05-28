@@ -1,52 +1,126 @@
-import React from "react";
-import { label, button, inputdash } from "../style";
+import React, { useState } from "react";
+import { label, button, input } from "../style";
 import "../index.css";
-import SignupForm from "./SignupForm";
+import { useMutation } from "@apollo/client";
+import { ADD_USER } from "../utils/mutations";
+import Auth from "../utils/auth";
 
 const TenantSignup = () => {
-  const propertyName = [
-    {
-      id: 1,
-      name: "Broadway Estate",
-    },
-    {
-      id: 2,
-      name: "California Estate",
-    },
-    {
-      id: 3,
-      name: "Canyon Estate",
-    },
-    {
-      id: 4,
-      name: "Louise Enterprise",
-    },
-  ];
+  const [formState, setFormState] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    role: "",
+    phoneNumber: "",
+  });
+  const [addUser, { error }] = useMutation(ADD_USER);
+  // update state based on form input changes
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setFormState({
+      ...formState,
+      [name]: value,
+      role: "TENANT",
+    });
+  };
+  console.log(formState);
+  // submit form
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const { data } = await addUser({
+        variables: { ...formState },
+      });
+
+      Auth.regSuccess(data.addUser.token);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
-    <>
-      <form className="p-6">
-        <SignupForm />
+    <form className="p-6" onSubmit={handleFormSubmit}>
+      <h1 className="flex justify-center mb-5 text-2xl text-gray-300 content-center">
+        Tenant Signup
+      </h1>
+      <div className="grid xl:grid-cols-2 xl:gap-6">
         <div className="relative z-0 w-full mb-6 group">
-          <label className={label}>Property Name</label>
-          <select name="cars" id="cars" className={inputdash}>
-            {propertyName.map((property) => (
-              <option
-                key={property.id}
-                value={property.name}
-                className="bg-pink-900 text-gray-300"
-              >
-                {property.name}
-              </option>
-            ))}
-          </select>
+          <input
+            type="text"
+            name="firstName"
+            id="firstName"
+            className={input}
+            placeholder=" "
+            value={formState.firstName}
+            onChange={handleChange}
+          ></input>
+          <label for="floating_first_name" className={label}>
+            First name
+          </label>
         </div>
-        <div className="flex justify-center mt-4">
-          <button type="submit" className={button}>
-            Submit
-          </button>
+        <div className="relative z-0 w-full mb-6 group">
+          <input
+            type="text"
+            name="lastName"
+            id="lastName"
+            className={input}
+            placeholder=" "
+            value={formState.lastName}
+            onChange={handleChange}
+          ></input>
+          <label for="floating_last_name" className={label}>
+            Last name
+          </label>
         </div>
-      </form>
-    </>
+      </div>
+      <div className="grid xl:grid-cols-2 xl:gap-6">
+        <div className="relative z-0 w-full mb-6 group">
+          <input
+            type="password"
+            name="password"
+            id="password"
+            className={input}
+            placeholder=" "
+            value={formState.password}
+            onChange={handleChange}
+          ></input>
+          <label className={label}>Password</label>
+        </div>
+        <div className="relative z-0 w-full group">
+          <input
+            type="email"
+            name="email"
+            id="email"
+            className={input}
+            placeholder=" "
+            value={formState.email}
+            onChange={handleChange}
+          ></input>
+          <label className={label}>Email address</label>
+        </div>
+        <div className="relative z-0 w-full mb-6 group">
+          <input
+            type="number"
+            name="phoneNumber"
+            id="phoneNumber"
+            className={input}
+            placeholder=" "
+            value={formState.phoneNumber}
+            onChange={handleChange}
+          ></input>
+          <label className={label}>Phone number</label>
+        </div>
+      </div>
+      <div className="flex justify-center mt-4">
+        <button type="submit" className={button}>
+          Submit
+        </button>
+      </div>
+      {error && <div>Signup failed</div>}
+    </form>
   );
 };
 

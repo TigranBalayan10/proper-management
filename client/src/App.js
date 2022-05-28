@@ -1,27 +1,59 @@
 import React from "react";
 import "./index.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  createHttpLink,
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import Nav from "./Pages/Nav";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import Home from "./Pages/Home";
-import Dashboard from "./Pages/Dashboard";
+import RegistrationSuccess from "./Components/RegistrationSuccess";
+import CompanyDashboard from "./Components/CompanyDashboard";
+import TenantDashboard from "./Components/TenantDashboard";
+
+const httpLink = createHttpLink({
+  uri: "/graphql",
+});
+
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem("id_token");
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
+});
 
 function App() {
   return (
-    <Router>
-      <div className="flex flex-col">
-        <Nav />
-        <main className="flex-1">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+    <ApolloProvider client={client}>
+      <Router>
+        <div className="flex flex-col">
+          <Nav />
+          <main className="flex-1">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/owner-dashboard" element={<CompanyDashboard />} />
+              <Route path="/tenant-dashboard" element={<TenantDashboard />} />
+              <Route path="/success" element={<RegistrationSuccess />} />
+            </Routes>
+          </main>
+        </div>
+      </Router>
+    </ApolloProvider>
   );
 }
 
