@@ -35,6 +35,8 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+const token = localStorage.getItem("id_token");
+
 function App() {
   return (
     <ApolloProvider client={client}>
@@ -46,8 +48,8 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
-              <Route path="/owner-dashboard" element={<CompanyDashboard />} />
-              <Route path="/tenant-dashboard" element={<TenantDashboard />} />
+              <Route path={`/owner-dashboard/${token}`} element={<CompanyDashboard />} />
+              <Route path={`/tenant-dashboard/${token}`} element={<TenantDashboard />} />
               <Route path="/success" element={<RegistrationSuccess />} />
             </Routes>
           </main>

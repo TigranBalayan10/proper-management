@@ -32,7 +32,7 @@ class AuthService {
     // Saves user token to localStorage
     localStorage.setItem('id_token', idToken);
 
-    window.location.assign('/owner-dashboard');
+    window.location.assign(`/owner-dashboard/${idToken}`);
 
   }
 
@@ -40,7 +40,7 @@ class AuthService {
     // Saves user token to localStorage
     localStorage.setItem('id_token', idToken);
 
-    window.location.assign('/tenant-dashboard');
+    window.location.assign(`/tenant-dashboard/${idToken}`);
   }
 
   regSuccess(idToken) {

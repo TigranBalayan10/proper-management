@@ -2,6 +2,11 @@ const { Schema, model } = require('mongoose');
 
 const propertySchema = new Schema(
     {
+        name: {
+            type: String,
+            required: true
+        },
+        
         address: {
             type: String,
             required: true,

@@ -13,7 +13,7 @@ function Login() {
     password: "",
     role: "",
   });
-  const [login, { error }] = useMutation(LOGIN_USER);
+  const [login] = useMutation(LOGIN_USER);
 
   // update state based on form input changes
   const handleChange = (event) => {
@@ -40,7 +40,7 @@ function Login() {
         Auth.loginOwner(data.login.token);
       }
     } catch (e) {
-      console.error(e);
+      console.log("Authentification failed");
     }
 
     // clear form values

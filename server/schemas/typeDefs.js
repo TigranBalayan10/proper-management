@@ -20,6 +20,7 @@ const typeDefs = gql`
 
   type Property {
     id: ID
+    name: String!
     address: String
     numberOfApartments: Int
     city: String
@@ -61,6 +62,7 @@ const typeDefs = gql`
     ): Auth
 
     addProperty(
+      name: String!
       address: String!
       city: String!
       state: String!
