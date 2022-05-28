@@ -110,16 +110,6 @@ const resolvers = {
 
       throw new AuthenticationError('You need to be logged in!');
     },
-
-    deleteProperty: async (parent, { id }) => {
-      const property = await Property.findByIdAndDelete(id);
-      return property;
-    },
-
-    deleteUser: async (parent, { id }) => {
-      const user = await User.findByIdAndDelete(id);
-      return user;
-    }
   }
 };
 
