@@ -5,17 +5,19 @@ import AddProperty from "./AddProperty";
 import { useQuery } from "@apollo/client";
 import { QUERY_USERS } from "../utils/queries";
 import { QUERY_PROPERTIES } from "../utils/queries";
+import { Link } from "react-router-dom";
 
 const CompanyDashboard = () => {
   const [addProperty, setAddProperty] = useState(false);
-  const {loading,  data} = useQuery(QUERY_PROPERTIES);
+  const { loading, data } = useQuery(QUERY_PROPERTIES);
+  const { loading: loadingTenants, data: getTenants } = useQuery(QUERY_USERS);
 
+  console.log(getTenants);
+  const tenants = getTenants?.getUsers.filter((user) => user.role === "TENANT");
 
   const addPropertyHandler = () => {
     setAddProperty(!addProperty);
   };
-
-  
 
   return (
     <>
@@ -80,23 +82,43 @@ const CompanyDashboard = () => {
                 </button>
                 {addProperty ? <AddProperty /> : null}
               </div>
-              <div className="w-full lg:w-1/3 px-12 border-t border-b lg:border-t-0 lg:border-b-0 lg:border-l lg:border-r border-gray-300 flex flex-col items-center py-10">
+              <div className="w-full lg:w-1/3 px-12 border-t border-b lg:border-t-0 lg:border-b-0 lg:border-l lg:border-r  flex flex-col items-center py-10">
                 <h2 className="text-2xl text-gray-300 mb-3">Tenants</h2>
+                {loadingTenants ? (
+                  <p>Loading...</p>
+                ) : (
+                  tenants.map((tenant) => (
+                <div className="w-full text-sm font-medium border-gray-200 bg-transparent">
+                  <Link
+                    to="/tenants"
+                    id="tenant-list"
+                    className="block w-full px-4 py-2 text-white border-b border-gray-200 cursor-pointer hover:bg-yellow-600 hover:text-white mb-2"
+                  >
+                    {tenant.firstName} {tenant.lastName}
+                  </Link>
+                </div>
+                )))}
               </div>
               <div className="w-full lg:w-1/3 px-12 text-gray-300  border-gray-300 flex flex-col items-center py-10">
                 <h1 className="text-2xl">Properties</h1>
-                {loading ? null : data.getProperties.map((property) => (
-                  <div class="block p-6 max-w-sm rounded-lg shadow-2xl  dark:bg-gray-800" key={property.id}>
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-300 mt-2">
-                      {property.name}
-                    </h5>
-                    <p class="font-normal text-gray-300 dark:text-gray-400">
-                      {property.address} <br />
-                      {property.city}, {property.state} {property.zip} <br />
-                      Number of Apartments: {property.numberOfApartments}
-                    </p>
-                  </div>
-                ))}
+                {loading
+                  ? null
+                  : data.getProperties.map((property) => (
+                      <div
+                        class="block p-6 max-w-sm rounded-lg shadow-2xl  dark:bg-gray-800"
+                        key={property.id}
+                      >
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-300 mt-2">
+                          {property.name}
+                        </h5>
+                        <p class="font-normal text-gray-300 dark:text-gray-400">
+                          {property.address} <br />
+                          {property.city}, {property.state} {property.zip}{" "}
+                          <br />
+                          Number of Apartments: {property.numberOfApartments}
+                        </p>
+                      </div>
+                    ))}
               </div>
             </div>
             {/* Card code block end */}

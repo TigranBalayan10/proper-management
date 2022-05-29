@@ -22,7 +22,7 @@ const typeDefs = gql`
     id: ID
     name: String!
     address: String
-    numberOfApartments: String
+    numberOfApartments: String!
     city: String
     state: String
     zip: String

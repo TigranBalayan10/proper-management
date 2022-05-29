@@ -54,3 +54,11 @@ body {
     rgba(232, 189, 47, 1) 100%
   );
 }
+
+#tenant-list:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(210, 104, 87, 1) 0%,
+    rgba(155, 74, 80, 1) 24.86%
+  );
+}

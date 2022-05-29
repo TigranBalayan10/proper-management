@@ -12,7 +12,7 @@ const AddProperty = () => {
     city: "",
     state: "",
     zip: "",
-    numberOfApartments: "",
+    numberOfApartments: [],
   });
 
   const handleChange = (event) => {
@@ -32,6 +32,7 @@ const AddProperty = () => {
         variables: { ...formState }
       });
       console.log("property added");
+      window.location.reload();
     } catch (e) {
       console.error(e);
     }

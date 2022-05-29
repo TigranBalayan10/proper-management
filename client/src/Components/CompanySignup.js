@@ -25,7 +25,7 @@ const CompanySignup = () => {
       role: "OWNER",
     });
   };
-console.log(formState);
+  console.log(formState);
   // submit form
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -101,7 +101,9 @@ console.log(formState);
           ></input>
           <label className={label}>Email address</label>
         </div>
-        <div className="relative z-0 w-full mb-6 group">
+      </div>
+      <div className="grid xl:grid-cols-2 xl:gap-6">
+        <div className="relative z-0 w-full mb-6 mt-6 group">
           <input
             type="number"
             name="phoneNumber"
