@@ -51,3 +51,31 @@ export const ADD_USER = gql`
     }
   }
 `;
+
+export const ADD_PROPERTY = gql`
+  mutation AddProperty(
+    $name: String!
+    $address: String!
+    $city: String!
+    $state: String!
+    $zip: String!
+    $numberOfApartments: String!
+  ) {
+    addProperty(
+      name: $name
+      address: $address
+      city: $city
+      state: $state
+      zip: $zip
+      numberOfApartments: $numberOfApartments
+    ) {
+      id
+      name
+      address
+      numberOfApartments
+      city
+      state
+      zip
+    }
+  }
+`;

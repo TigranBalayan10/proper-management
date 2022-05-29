@@ -12,3 +12,30 @@ export const QUERY_ME = gql`
     }
   }
 `;
+
+export const QUERY_PROPERTIES = gql`
+  query GetProperties {
+    getProperties {
+      id
+      name
+      address
+      numberOfApartments
+      city
+      state
+      zip
+    }
+  }
+`;
+
+export const QUERY_USERS = gql`
+  query GetUsers {
+    getUsers {
+      id
+      firstName
+      lastName
+      email
+      phoneNumber
+      role
+    }
+  }
+`;

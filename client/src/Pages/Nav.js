@@ -19,13 +19,21 @@ function Nav() {
     {
       name: "Signup",
       path: "/signup",
+    },
+    {
+      name: "Dashboard Owner",
+      path: "/dash-owner",
+    },
+    {
+      name: "Dashboard Tenant",
+      path: "/tenant-owner",
     }
   ];
 
   let [open, setOpen] = useState(false);
 
   return (
-    <div className="shadow-md w-full fixed top-0 left-0">
+    <div className="shadow-md z-10 w-full fixed top-0 left-0">
       <div className="md:flex items-center justify-between py-4 md:px-10 px-7" id="nav">
         <div className="font-bold text-2xl cursor-pointer flex items-center text-gray-800">
         <Link to="/">

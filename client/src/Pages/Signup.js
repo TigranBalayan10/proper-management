@@ -18,8 +18,8 @@ function Signup() {
 
   return (
     <div className="flex justify-center mt-32">
-      <div className="w-3/4 md:w-1/2 p-4 rounded-3xl shadow-2xl" id="card">
-        <ul class="hidden text-sm font-medium text-center text-white rounded-lg divide-x divide-gray-200 shadow sm:flex">
+      <div className="w-3/4 sm:w-1/2 md:w-1/2 p-4 rounded-3xl shadow-2xl" id="card">
+        <ul class="text-sm font-medium text-center text-white rounded-lg divide-x divide-gray-200 shadow sm:flex">
           <li
             className="w-full inline-block p-4 hover:text-yellow-400 hover:bg-yellow-700 hover:rounded-xl focus:ring-4 focus:bg-yellow-900 focus:rounded focus:ring-yellow-700 cursor-pointer"
             onClick={handleCompany}

@@ -4,8 +4,6 @@ import "../index.css";
 import { useMutation } from "@apollo/client";
 import { ADD_USER } from "../utils/mutations";
 import Auth from "../utils/auth";
-import { Link } from "react-router-dom";
-import RegistrationSuccess from "./RegistrationSuccess";
 
 const CompanySignup = () => {
   const [formState, setFormState] = useState({
@@ -37,7 +35,7 @@ console.log(formState);
         variables: { ...formState },
       });
 
-      Auth.login(data.addUser.token);
+      Auth.regSuccess(data.addUser.token);
     } catch (e) {
       console.error(e);
     }

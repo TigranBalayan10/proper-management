@@ -7,7 +7,7 @@ const Dashboard = () => {
   return (
     <>
       {/* <CompanyDashboard /> */}
-      <TenantDashboard />
+      {/* <TenantDashboard /> */}
     </>
   );
 };

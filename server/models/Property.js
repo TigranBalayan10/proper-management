@@ -6,14 +6,14 @@ const propertySchema = new Schema(
             type: String,
             required: true
         },
-        
+
         address: {
             type: String,
             required: true,
             trim: true
         },
         numberOfApartments: {
-            type: Number,
+            type: String,
             required: true,
             trim: true
         },

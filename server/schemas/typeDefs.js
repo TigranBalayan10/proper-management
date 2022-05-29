@@ -22,10 +22,10 @@ const typeDefs = gql`
     id: ID
     name: String!
     address: String
-    numberOfApartments: Int
+    numberOfApartments: String
     city: String
     state: String
-    zip: Int
+    zip: String
     owner: User
   }
 
@@ -66,9 +66,9 @@ const typeDefs = gql`
       address: String!
       city: String!
       state: String!
-      zip: Int!
-      numberOfApartments: Int!
-    ): Property
+      zip: String!
+      numberOfApartments: String!
+    ): Property!
 
     attachTenant(
       apartmentId: ID!
