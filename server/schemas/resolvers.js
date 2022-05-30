@@ -5,15 +5,15 @@ const { signToken } = require('../utils/auth');
 const resolvers = {
   Query: {
     me: async (parent, args, context) => {
-      console.log('context', context.user);
+      console.log("context", context.user);
       if (context.user) {
-        const userData = await User.findOne({ _id: context.user._id })
-          .populate('properties')
+        const userData = await User.findOne({ _id: context.user._id }).populate(
+          "properties"
+        );
 
         return userData;
       }
-      throw new AuthenticationError('You must be logged in to view this data');
-
+      throw new AuthenticationError("You must be logged in to view this data");
     },
 
     getProperties: async (parent, args, context) => {
@@ -23,11 +23,11 @@ const resolvers = {
         return properties;
       }
 
-      throw new AuthenticationError('You must be logged in to view this data');
+      throw new AuthenticationError("You must be logged in to view this data");
     },
 
     getProperty: async (parent, { id }) => {
-      const property = await Property.findOne({ _id: id })
+      const property = await Property.findOne({ _id: id });
       return property;
     },
 
@@ -39,14 +39,13 @@ const resolvers = {
     },
 
     getUser: async (parent, { id }) => {
-      return User.findOne({ id })
-        .select('-__v -password')
-    }
+      return User.findOne({ id }).select("-__v -password");
+    },
   },
 
   Mutation: {
     addUser: async (parent, args) => {
-      console.log(await User.find())
+      console.log(await User.find());
       const user = await User.create(args);
       console.log(user);
       const token = signToken(user);
@@ -58,13 +57,13 @@ const resolvers = {
       const user = await User.findOne({ email, role });
 
       if (!user) {
-        throw new AuthenticationError('Incorrect credentials');
+        throw new AuthenticationError("Incorrect credentials");
       }
 
       const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
-        throw new AuthenticationError('Incorrect credentials');
+        throw new AuthenticationError("Incorrect credentials");
       }
 
       const token = signToken(user);
@@ -73,8 +72,11 @@ const resolvers = {
 
     addProperty: async (parent, args, context) => {
       console.log(context);
-      if (context.identity?.role === 'OWNER') {
-        const property = await Property.create({ ...args, owner: context.user._id });
+      if (context.identity?.role === "OWNER") {
+        const property = await Property.create({
+          ...args,
+          owner: context.user._id,
+        });
 
         await User.findOneAndUpdate(
           { _id: context.user._id},
@@ -85,7 +87,7 @@ const resolvers = {
         return property;
       }
 
-      throw new AuthenticationError('You need to be logged in!');
+      throw new AuthenticationError("You need to be logged in!");
     },
 
     attachTenant: async (parent, { propertyId }, context) => {
@@ -99,9 +101,9 @@ const resolvers = {
         return property;
       }
 
-      throw new AuthenticationError('You need to be logged in!');
+      throw new AuthenticationError("You need to be logged in!");
     },
-  }
+  },
 };
 
 module.exports = resolvers;

@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const requestSchema = require('./Request');
 
 const propertySchema = new Schema(
     {

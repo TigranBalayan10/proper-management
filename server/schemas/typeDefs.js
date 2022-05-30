@@ -1,7 +1,6 @@
-const { gql } = require('apollo-server-express');
+const { gql } = require("apollo-server-express");
 
 const typeDefs = gql`
-
   type User {
     id: ID!
     firstName: String
@@ -13,9 +12,33 @@ const typeDefs = gql`
     properties: [Property]
   }
 
+  type Request {
+    _id: ID!
+    moreInfo: String
+    type: Type!
+    firstName: String!
+    lastName: String!
+    status: Status!
+    createdAt: String!
+  }
+
   enum Role {
     OWNER
     TENANT
+  }
+
+  enum Status {
+    PENDING
+    APPROVED
+    REJECTED
+  }
+
+  enum Type {
+    PLUMBING
+    ELECTRIC
+    HEATING
+    CARPENTRY
+    OTHER
   }
 
   type Property {
@@ -43,7 +66,6 @@ const typeDefs = gql`
   }
 
   type Mutation {
-
     addUser(
       firstName: String!
       lastName: String!
@@ -69,7 +91,6 @@ const typeDefs = gql`
 
     deleteProperty(id: ID!): Property!
     deleteUser(id: ID!): User!
-    
   }
 `;
 
