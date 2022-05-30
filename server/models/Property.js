@@ -4,16 +4,11 @@ const propertySchema = new Schema(
     {
         name: {
             type: String,
-            required: true
-        },
-        
-        address: {
-            type: String,
             required: true,
             trim: true
         },
-        numberOfApartments: {
-            type: Number,
+        address: {
+            type: String,
             required: true,
             trim: true
         },
@@ -35,7 +30,13 @@ const propertySchema = new Schema(
         owner: {
             type: Schema.Types.ObjectId,
             ref: 'User'
-        }
+        },
+        tenants: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User'
+            }
+        ],
     }
 )
 

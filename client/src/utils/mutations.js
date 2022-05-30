@@ -13,7 +13,6 @@ export const LOGIN_USER = gql`
         properties {
           id
           address
-          numberOfApartments
           city
           state
           zip
