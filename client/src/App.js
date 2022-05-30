@@ -48,8 +48,6 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
-              <Route path = "/dash-owner" element={<CompanyDashboard />} />
-              <Route path = "/tenant-owner" element={<TenantDashboard />} />
               <Route path={`/owner-dashboard/${token}`} element={<CompanyDashboard />} />
               <Route path={`/tenant-dashboard/${token}`} element={<TenantDashboard />} />
               <Route path="/success" element={<RegistrationSuccess />} />
