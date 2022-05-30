@@ -92,6 +92,7 @@ const CompanyDashboard = () => {
                   <Link
                     to="/tenants"
                     id="tenant-list"
+                    key={tenant.id}
                     className="block w-full px-4 py-2 text-white border-b border-gray-200 cursor-pointer hover:bg-yellow-600 hover:text-white mb-2"
                   >
                     {tenant.firstName} {tenant.lastName}
