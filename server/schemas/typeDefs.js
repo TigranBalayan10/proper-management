@@ -13,7 +13,7 @@ const typeDefs = gql`
   }
 
   type Request {
-    _id: ID!
+    id: ID!
     moreInfo: String
     type: Type!
     firstName: String!
@@ -99,7 +99,6 @@ const typeDefs = gql`
       firstName: String!
       lastName: String!
       type: Type!
-      status: Status
     ): Property!
 
     attachTenant(apartmentId: ID!): Apartment

@@ -99,6 +99,21 @@ const resolvers = {
       throw new AuthenticationError("You need to be logged in!");
     },
 
+    addRequest: async (parent, args, context) => {
+      console.log(args);
+      if (context.identity?.role === "TENANT") {
+        const updateProperty = await Property.findOneAndUpdate(
+          { _id: args.propertyId },
+          { $push: { requests: args } },
+          { new: true}
+        );
+        
+        return updateProperty;
+      }
+
+      throw new AuthenticationError("You need to be logged in!");
+    },
+
     attachTenant: async (parent, { apartmentId }, context) => {
       if (context.user && context.identity.role === "TENANT") {
         const apartment = await Apartment.findOneAndUpdate(
