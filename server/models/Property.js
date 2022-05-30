@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const requestSchema = require('./Request');
 
 const propertySchema = new Schema(
     {
@@ -35,7 +36,8 @@ const propertySchema = new Schema(
         owner: {
             type: Schema.Types.ObjectId,
             ref: 'User'
-        }
+        },
+        requests: [requestSchema]
     }
 )
 

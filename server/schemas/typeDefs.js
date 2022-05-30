@@ -1,7 +1,6 @@
-const { gql } = require('apollo-server-express');
+const { gql } = require("apollo-server-express");
 
 const typeDefs = gql`
-
   type User {
     id: ID!
     firstName: String
@@ -13,9 +12,33 @@ const typeDefs = gql`
     properties: [Property]
   }
 
+  type Request {
+    _id: ID!
+    moreInfo: String
+    type: Type!
+    firstName: String!
+    lastName: String!
+    status: Status!
+    createdAt: String!
+  }
+
   enum Role {
     OWNER
     TENANT
+  }
+
+  enum Status {
+    PENDING
+    APPROVED
+    REJECTED
+  }
+
+  enum Type {
+    PLUMBING
+    ELECTRIC
+    HEATING
+    CARPENTRY
+    OTHER
   }
 
   type Property {
@@ -27,6 +50,7 @@ const typeDefs = gql`
     state: String
     zip: String
     owner: User
+    requests: [Request]
   }
 
   type Apartment {
@@ -51,7 +75,6 @@ const typeDefs = gql`
   }
 
   type Mutation {
-
     addUser(
       firstName: String!
       lastName: String!
@@ -70,15 +93,21 @@ const typeDefs = gql`
       numberOfApartments: String!
     ): Property!
 
-    attachTenant(
-      apartmentId: ID!
-    ): Apartment
+    addRequest(
+      propertyId: ID!
+      moreInfo: String
+      firstName: String!
+      lastName: String!
+      type: Type!
+      status: Status
+    ): Property!
+
+    attachTenant(apartmentId: ID!): Apartment
 
     login(email: String!, password: String!, role: Role!): Auth!
 
     deleteProperty(id: ID!): Property!
     deleteUser(id: ID!): User!
-    
   }
 `;
 
