@@ -89,15 +89,14 @@ const CompanyDashboard = () => {
                   ? null
                   : properties[0].map((property) => (
                       <div
-                        class="block p-6 w-full rounded-lg shadow-2xl"
-                        key={property.name}
+                        className="block p-6 w-full rounded-lg shadow-2xl"
+                        key={property.id}
                       >
-                        <h5 class="mb-2 text-2xl font-bold tracking-tight mt-2">
+                        <h5 className="mb-2 text-2xl font-bold tracking-tight mt-2">
                           {property.name}
                         </h5>
-                        <p class="font-normal">
-                          {property.address} <br />
-                          {property.city}, {property.state} {property.zip}{" "}
+                        <p className="font-normal">
+                          {property.address}, {property.city}, {property.state} {property.zip}{" "}
                           <br />
                         </p>
                       </div>
