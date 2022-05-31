@@ -50,6 +50,7 @@ const typeDefs = gql`
     zip: String
     owner: User
     tenants: [User]
+    requests: [Request]
   }
 
   type Auth {
@@ -82,20 +83,17 @@ const typeDefs = gql`
       state: String!
       zip: Int!
     ): Property
-    
     attachTenant(
       propertyId: ID!
-<<<<<<< HEAD
+    ): Property
+    
+    addRequest(
+      propertyId: ID!
       moreInfo: String
       firstName: String!
       lastName: String!
       type: Type!
     ): Property!
-
-    attachTenant(apartmentId: ID!): Apartment
-=======
-    ): Property
->>>>>>> dbb702a226d6fff36c020db66e9c33d8da4657a6
 
     login(email: String!, password: String!, role: Role!): Auth!
 
