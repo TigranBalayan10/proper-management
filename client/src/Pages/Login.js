@@ -40,7 +40,7 @@ function Login() {
         Auth.loginOwner(data.login.token);
       }
     } catch (e) {
-      console.log("Authentification failed");
+      console.log(e);
     }
 
     // clear form values

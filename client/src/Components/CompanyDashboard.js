@@ -4,17 +4,17 @@ import { button } from "../style";
 import AddProperty from "./AddProperty";
 import { useQuery } from "@apollo/client";
 import { QUERY_USERS } from "../utils/queries";
-import { QUERY_PROPERTIES } from "../utils/queries";
 import { Link } from "react-router-dom";
 import Auth from "../utils/auth";
 
 const CompanyDashboard = () => {
   const [addProperty, setAddProperty] = useState(false);
-  const { loading, data } = useQuery(QUERY_PROPERTIES);
-  const { loading: loadingTenants, data: getTenants } = useQuery(QUERY_USERS);
+  const { loading, data } = useQuery(QUERY_USERS);
+  const properties = data?.getUsers.map((user) => user.properties);
+  console.log(properties, "properties");
+  
 
-  console.log(getTenants);
-  const tenants = getTenants?.getUsers.filter((user) => user.role === "TENANT");
+  console.log(data);
 
   const addPropertyHandler = () => {
     setAddProperty(!addProperty);
@@ -87,10 +87,10 @@ const CompanyDashboard = () => {
                 <h1 className="text-2xl">Properties</h1>
                 {loading
                   ? null
-                  : data.getProperties.map((property) => (
+                  : properties[0].map((property) => (
                       <div
                         class="block p-6 w-full rounded-lg shadow-2xl"
-                        key={property.id}
+                        key={property.name}
                       >
                         <h5 class="mb-2 text-2xl font-bold tracking-tight mt-2">
                           {property.name}
@@ -99,7 +99,6 @@ const CompanyDashboard = () => {
                           {property.address} <br />
                           {property.city}, {property.state} {property.zip}{" "}
                           <br />
-                          Number of Apartments: {property.numberOfApartments}
                         </p>
                       </div>
                     ))}

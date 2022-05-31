@@ -81,8 +81,9 @@ const typeDefs = gql`
       address: String!
       city: String!
       state: String!
-      zip: Int!
+      zip: String!
     ): Property
+    
     attachTenant(
       propertyId: ID!
     ): Property

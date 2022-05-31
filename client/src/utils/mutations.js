@@ -58,7 +58,6 @@ export const ADD_PROPERTY = gql`
     $city: String!
     $state: String!
     $zip: String!
-    $numberOfApartments: String!
   ) {
     addProperty(
       name: $name
@@ -66,15 +65,29 @@ export const ADD_PROPERTY = gql`
       city: $city
       state: $state
       zip: $zip
-      numberOfApartments: $numberOfApartments
     ) {
-      id
       name
       address
-      numberOfApartments
       city
       state
       zip
+      id
+      requests {
+        id
+        moreInfo
+        type
+        firstName
+        lastName
+        status
+        createdAt
+      }
+      tenants {
+        id
+        firstName
+        lastName
+        email
+        phoneNumber
+      }
     }
   }
 `;

@@ -30,12 +30,19 @@ export const QUERY_PROPERTIES = gql`
 export const QUERY_USERS = gql`
   query GetUsers {
     getUsers {
-      id
       firstName
       lastName
-      email
-      phoneNumber
       role
+      email
+      id
+      phoneNumber
+      properties {
+        name
+        address
+        id
+        city
+        zip
+      }
     }
   }
 `;
