@@ -5,15 +5,10 @@ const propertySchema = new Schema(
     {
         name: {
             type: String,
-            required: true
-        },
-
-        address: {
-            type: String,
             required: true,
             trim: true
         },
-        numberOfApartments: {
+        address: {
             type: String,
             required: true,
             trim: true
@@ -37,7 +32,12 @@ const propertySchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'User'
         },
-        requests: [requestSchema]
+        tenants: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User'
+            }
+        ],
     }
 )
 

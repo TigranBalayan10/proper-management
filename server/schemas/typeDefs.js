@@ -45,19 +45,11 @@ const typeDefs = gql`
     id: ID
     name: String!
     address: String
-    numberOfApartments: String!
     city: String
     state: String
     zip: String
     owner: User
-    requests: [Request]
-  }
-
-  type Apartment {
-    id: ID
-    number: Int
-    property: Property
-    tenant: User
+    tenants: [User]
   }
 
   type Auth {
@@ -71,7 +63,6 @@ const typeDefs = gql`
     getUser(_id: ID!): User
     getProperties: [Property]
     getProperty(id: ID!): Property!
-    getApartments(propertyId: ID!): [Apartment]
   }
 
   type Mutation {
@@ -89,12 +80,12 @@ const typeDefs = gql`
       address: String!
       city: String!
       state: String!
-      zip: String!
-      numberOfApartments: String!
-    ): Property!
-
-    addRequest(
+      zip: Int!
+    ): Property
+    
+    attachTenant(
       propertyId: ID!
+<<<<<<< HEAD
       moreInfo: String
       firstName: String!
       lastName: String!
@@ -102,6 +93,9 @@ const typeDefs = gql`
     ): Property!
 
     attachTenant(apartmentId: ID!): Apartment
+=======
+    ): Property
+>>>>>>> dbb702a226d6fff36c020db66e9c33d8da4657a6
 
     login(email: String!, password: String!, role: Role!): Auth!
 
