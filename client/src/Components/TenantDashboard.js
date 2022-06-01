@@ -39,9 +39,6 @@ const TenantDashboard = () => {
     },
   });
   const sentRequests = DataProperty?.getProperty.requests;
-  LoadingProperty && console.log(LoadingProperty, "LoadingProperty");
-  ErrorProperty && console.log(ErrorProperty, "ErrorProperty");
-  DataProperty && console.log(sentRequests, "Sent Requests");
 
   const [request, setRequest] = useState({
     propertyId: "",
@@ -266,7 +263,7 @@ const TenantDashboard = () => {
                   <p
                     
                   id="tenant-list"
-                  key="maintenance-1"
+                  key={request.id}
                   className="flex justify-between w-full px-4 py-2 text-white border-b border-gray-200 cursor-pointer hover:bg-yellow-600 hover:text-white mb-2"
                 >
                   <p>{request.type}</p>
