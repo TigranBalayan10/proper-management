@@ -8,7 +8,14 @@ export const QUERY_ME = gql`
       lastName
       email
       phoneNumber
-      role
+      properties {
+        id
+        name
+        address
+        city
+        state
+        zip
+      }
     }
   }
 `;
@@ -16,12 +23,25 @@ export const QUERY_ME = gql`
 export const QUERY_PROPERTIES = gql`
   query GetProperties {
     getProperties {
-      id
       name
       address
-      numberOfApartments
-      city
       state
+      city
+      requests {
+        moreInfo
+        type
+        firstName
+        lastName
+        status
+        createdAt
+      }
+      id
+      tenants {
+        firstName
+        lastName
+        phoneNumber
+        id
+      }
       zip
     }
   }

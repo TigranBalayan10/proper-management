@@ -19,6 +19,7 @@ const typeDefs = gql`
     firstName: String!
     lastName: String!
     status: Status!
+    unitNumber: String!
     createdAt: String!
   }
 
@@ -94,6 +95,7 @@ const typeDefs = gql`
       firstName: String!
       lastName: String!
       type: Type!
+      unitNumber: String!
     ): Property!
 
     login(email: String!, password: String!, role: Role!): Auth!

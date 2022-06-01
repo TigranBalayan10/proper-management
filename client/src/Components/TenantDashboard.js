@@ -1,8 +1,92 @@
 import React from "react";
 import "../index.css";
 import { label, button, numinput, inputdash } from "../style";
+import { QUERY_PROPERTIES } from "../utils/queries";
+import { useQuery } from "@apollo/client";
+import { useState } from "react";
+import { useMutation } from "@apollo/client";
+import { ATTACH_TENANT } from "../utils/mutations";
+import { QUERY_ME } from "../utils/queries";
+import { ADD_REQUEST } from "../utils/mutations";
 
 const TenantDashboard = () => {
+  const { loading, error, data } = useQuery(QUERY_PROPERTIES);
+  const {
+    loading: loadingMe,
+    error: errorMe,
+    data: dataMe,
+  } = useQuery(QUERY_ME);
+  const [attachTenant, { error: errorTenant }] = useMutation(ATTACH_TENANT);
+  const [addRequest, { error: errorRequest }] = useMutation(ADD_REQUEST);
+  const [getPropertyId, setGetPropertyId] = useState({
+    propertyId: "",
+  });
+  const me = dataMe?.me;
+  const [request, setRequest] = useState({
+    firstName: me.firstName,
+    lastName: me.lastName,
+    type: "",
+    unitNumber: "",
+    moreInfo: "",
+  });
+
+  const properties = data?.getProperties;
+
+  const handleChangeRequest = (event) => {
+    const { name, value } = event.target;
+    setRequest({
+      ...request,
+      [name]: value,
+    });
+  };
+  console.log(request);
+
+  const handleSubmitRequest = async (event) => {
+    event.preventDefault();
+    try {
+      const { data } = await addRequest({
+        variables: {
+          ...request,
+        },
+      });
+      console.log(data);
+      window.location.reload();
+    } catch (e) {
+      console.log(e);
+    }
+    // clear form values
+    setRequest({
+      type: "",
+      unitNumber: "",
+      moreInfo: "",
+    });
+  };
+
+  const handleChange = (event) => {
+    console.log(event.target.value);
+    const { name, value } = event.target;
+    setGetPropertyId({
+      ...getPropertyId,
+      [name]: value,
+    });
+  };
+
+  console.log(getPropertyId);
+
+  // submit form
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const { data } = await attachTenant({
+        variables: { getPropertyId },
+      });
+      console.log(data);
+      window.location.reload();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const maintenanceTypes = [
     {
       id: 1,
@@ -10,11 +94,11 @@ const TenantDashboard = () => {
     },
     {
       id: 2,
-      name: "Electrical",
+      name: "Electric",
     },
     {
       id: 3,
-      name: "HVAC",
+      name: "Heating",
     },
     {
       id: 4,
@@ -22,7 +106,7 @@ const TenantDashboard = () => {
     },
     {
       id: 5,
-      name: "Painting",
+      name: "Other",
     },
   ];
 
@@ -37,16 +121,16 @@ const TenantDashboard = () => {
               className="flex flex-col lg:flex-row mx-auto shadow rounded"
               id="card"
             >
-              <div className="w-full lg:w-1/3 px-12 flex flex-col items-center py-10">
+              <form className="w-full lg:w-1/3 px-12 flex flex-col items-center py-10" onSubmit={handleFormSubmit}>
                 <div className="w-24 h-24 mb-3 p-2 rounded-full flex items-center justify-center">
                   <img
-                    src="../public/Avatar.svg"
+                    src={require("../Media/Avatar.svg").default}
                     alt="Avatar"
                     className="w-full h-full overflow-hidden object-cover rounded-full"
                   />
                 </div>
                 <h2 className="text-gray-300 dark:text-gray-100 text-xl tracking-normal font-medium mb-1">
-                  John Smith
+                  {me?.firstName} {me?.lastName}
                 </h2>
                 <p className="flex text-gray-300 dark:text-gray-100 text-sm tracking-normal font-normal mb-3 text-center">
                   1001 Main St apt 100, Glendale, CA
@@ -54,37 +138,81 @@ const TenantDashboard = () => {
                 <p className="text-gray-300 dark:text-gray-100 text-sm tracking-normal font-normal mb-8 text-center w-10/12">
                   Broadway Enterprise
                 </p>
-                <div className="flex items-center">
-                  <div className></div>
+                <div className="relative z-0 w-full mb-6 mt-6 group">
+                  <label className={label}>Add Property</label>
+
+                  <select
+                    className={inputdash}
+                    name="propertyId"
+                    value={getPropertyId}
+                    onChange={handleChange}
+                  >
+                    {loading
+                      ? null
+                      : properties.map((property) => (
+                          <option
+                            key={property.id}
+                            className="bg-pink-900 text-gray-300"
+                          >
+                            {property.id}
+                          </option>
+                        ))}
+                  </select>
+
+                  <button
+                    type="submit"
+                    className="px-3 py-2 mt-3 text-sm font-medium text-center text-white bg-pink-900 rounded-lg hover:bg-pink-800 focus:ring-4 focus:outline-none focus:ring-pink-300"
+                  >
+                    + ADD
+                  </button>
                 </div>
-                <div className="relative z-0 mb-6">
+
+                <div className="relative z-0 mb-6 mt-5">
                   <input type="number" className={numinput}></input>
                   <label className={label}>Rent Amount</label>
                 </div>
                 <button type="submit" className={button}>
                   Pay Rent
                 </button>
-              </div>
-              <div className="w-full lg:w-1/3 px-12 border-t border-b lg:border-t-0 lg:border-b-0 lg:border-l lg:border-r border-gray-300 flex flex-col items-center py-10">
+              </form>
+              <form
+                className="w-full lg:w-1/3 px-12 border-t border-b lg:border-t-0 lg:border-b-0 lg:border-l lg:border-r border-gray-300 flex flex-col items-center py-10"
+                onSubmit={handleSubmitRequest}
+              >
                 <h1 className="text-2xl text-white">Request Maintenance</h1>
                 <div className="relative z-0 w-full mb-6 mt-6 group">
                   <label className={label}>Choose Maintenance Type</label>
-                  <select className={inputdash}>
+                  <select
+                    className={inputdash}
+                    name="type"
+                    onChange={handleChangeRequest}
+                  >
                     {maintenanceTypes.map((type) => (
-                        <option key={type.id} value={type.name} className="bg-pink-900 text-gray-300">
-                            {type.name}
-                        </option>
+                      <option
+                        key={type.id}
+                        className="bg-pink-900 text-gray-300"
+                      >
+                        {type.name}
+                      </option>
                     ))}
                   </select>
                 </div>
-                <label
-                  for="message"
-                  className="block mb-2 text-xl font-medium text-gray-300 dark:text-gray-400"
-                >
+                <div className="relative z-0 mb-3">
+                  <input
+                    type="number"
+                    name="unitNumber"
+                    onChange={handleChangeRequest}
+                    className={numinput}
+                  ></input>
+                  <label className={label}>Apartment Number</label>
+                </div>
+                <label className="block mb-2 text-xl font-medium text-gray-300 dark:text-gray-400">
                   More Info
                 </label>
                 <textarea
                   id="message"
+                  name="moreInfo"
+                  onChange={handleChangeRequest}
                   rows="4"
                   className="block p-2.5 w-full text-sm text-gray-900 bg-gray-200 rounded-lg border-1 border-yellow-600 focus:ring-yellow-500 focus:border-yellow-500 mb-4"
                   placeholder="Your message..."
@@ -92,7 +220,7 @@ const TenantDashboard = () => {
                 <button type="submit" className={button}>
                   Request
                 </button>
-              </div>
+              </form>
               <div className="w-full lg:w-1/3 px-12 text-gray-300  border-gray-300 flex flex-col items-center py-10">
                 <h2 className="text-2xl text-gray-300 mb-3">Feedback</h2>
                 <label
