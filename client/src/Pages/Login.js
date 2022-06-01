@@ -28,12 +28,12 @@ function Login() {
   // submit form
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-
+    
     try {
       const { data } = await login({
         variables: { ...formState },
       });
-      
+      console.log(formState, "login");
       if (formState.role === "TENANT") {
         Auth.loginTenant(data.login.token);
       } else {

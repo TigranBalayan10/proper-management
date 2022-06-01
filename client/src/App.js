@@ -38,7 +38,9 @@ const client = new ApolloClient({
 
 const token = localStorage.getItem("id_token");
 
+
 function App() {
+
   return (
     <ApolloProvider client={client}>
       <Router>

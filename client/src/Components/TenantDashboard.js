@@ -3,7 +3,7 @@ import "../index.css";
 import { label, button, numinput, inputdash } from "../style";
 import { QUERY_PROPERTIES } from "../utils/queries";
 import { useQuery } from "@apollo/client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import { ATTACH_TENANT } from "../utils/mutations";
 import { QUERY_ME } from "../utils/queries";
@@ -11,6 +11,7 @@ import { ADD_REQUEST } from "../utils/mutations";
 
 const TenantDashboard = () => {
   const { loading, error, data } = useQuery(QUERY_PROPERTIES);
+  console.log(data, "data");
   const {
     loading: loadingMe,
     error: errorMe,
@@ -22,15 +23,36 @@ const TenantDashboard = () => {
     propertyId: "",
   });
   const me = dataMe?.me;
+  const properties = data?.getProperties;
+
+  // useEffect get property id from properies
+  useEffect(() => {
+    if (properties) {
+      const propertyId = properties.find((property) => {
+        console.log(property, "property");
+        if (property.tenants.id === me.id) {
+          return property.id;
+        }
+      });
+      setGetPropertyId({
+        propertyId: propertyId,
+      });
+    }
+  }, [properties]);
+  
   const [request, setRequest] = useState({
-    firstName: me.firstName,
-    lastName: me.lastName,
+    propertyId: "",
+    firstName: me?.firstName,
+    lastName: me?.lastName,
     type: "",
     unitNumber: "",
     moreInfo: "",
   });
 
-  const properties = data?.getProperties;
+ 
+  const propertyId = properties?.filter(
+    (property) => property.id === getPropertyId
+  );
 
   const handleChangeRequest = (event) => {
     const { name, value } = event.target;
@@ -46,7 +68,7 @@ const TenantDashboard = () => {
     try {
       const { data } = await addRequest({
         variables: {
-          ...request,
+          ...request,          
         },
       });
       console.log(data);
@@ -76,11 +98,12 @@ const TenantDashboard = () => {
   // submit form
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    console.log(getPropertyId, "submit form");
     try {
-      const { data } = await attachTenant({
-        variables: { getPropertyId },
+      const result = await attachTenant({
+        variables: getPropertyId,
       });
-      console.log(data);
+
       window.location.reload();
     } catch (e) {
       console.log(e);
@@ -121,7 +144,10 @@ const TenantDashboard = () => {
               className="flex flex-col lg:flex-row mx-auto shadow rounded"
               id="card"
             >
-              <form className="w-full lg:w-1/3 px-12 flex flex-col items-center py-10" onSubmit={handleFormSubmit}>
+              <form
+                className="w-full lg:w-1/3 px-12 flex flex-col items-center py-10"
+                onSubmit={handleFormSubmit}
+              >
                 <div className="w-24 h-24 mb-3 p-2 rounded-full flex items-center justify-center">
                   <img
                     src={require("../Media/Avatar.svg").default}
@@ -130,7 +156,8 @@ const TenantDashboard = () => {
                   />
                 </div>
                 <h2 className="text-gray-300 dark:text-gray-100 text-xl tracking-normal font-medium mb-1">
-                  {me?.firstName} {me?.lastName}
+                  {loadingMe ? "Loading..." : me.firstName}{" "}
+                  {loadingMe ? "Loading..." : me.lastName}
                 </h2>
                 <p className="flex text-gray-300 dark:text-gray-100 text-sm tracking-normal font-normal mb-3 text-center">
                   1001 Main St apt 100, Glendale, CA
@@ -138,34 +165,38 @@ const TenantDashboard = () => {
                 <p className="text-gray-300 dark:text-gray-100 text-sm tracking-normal font-normal mb-8 text-center w-10/12">
                   Broadway Enterprise
                 </p>
-                <div className="relative z-0 w-full mb-6 mt-6 group">
-                  <label className={label}>Add Property</label>
+                {handleFormSubmit ? null : (
+                  <div className="relative z-0 w-full mb-6 mt-6 group">
+                    <label className={label}>Add Property</label>
 
-                  <select
-                    className={inputdash}
-                    name="propertyId"
-                    value={getPropertyId}
-                    onChange={handleChange}
-                  >
-                    {loading
-                      ? null
-                      : properties.map((property) => (
-                          <option
-                            key={property.id}
-                            className="bg-pink-900 text-gray-300"
-                          >
-                            {property.id}
-                          </option>
-                        ))}
-                  </select>
+                    <select
+                      className={inputdash}
+                      name="propertyId"
+                      value={getPropertyId}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select Property</option>
+                      {loading
+                        ? null
+                        : properties.map((property) => (
+                            <option
+                              key={property.id}
+                              value={property.id}
+                              className="bg-pink-900 text-gray-300"
+                            >
+                              {property.name}
+                            </option>
+                          ))}
+                    </select>
 
-                  <button
-                    type="submit"
-                    className="px-3 py-2 mt-3 text-sm font-medium text-center text-white bg-pink-900 rounded-lg hover:bg-pink-800 focus:ring-4 focus:outline-none focus:ring-pink-300"
-                  >
-                    + ADD
-                  </button>
-                </div>
+                    <button
+                      type="submit"
+                      className="px-3 py-2 mt-3 text-sm font-medium text-center text-white bg-pink-900 rounded-lg hover:bg-pink-800 focus:ring-4 focus:outline-none focus:ring-pink-300"
+                    >
+                      + ADD
+                    </button>
+                  </div>
+                )}
 
                 <div className="relative z-0 mb-6 mt-5">
                   <input type="number" className={numinput}></input>

@@ -3,16 +3,16 @@ import "../index.css";
 import { button } from "../style";
 import AddProperty from "./AddProperty";
 import { useQuery } from "@apollo/client";
-import { QUERY_USERS } from "../utils/queries";
+import { QUERY_ME } from "../utils/queries";
 import { Link } from "react-router-dom";
 import Auth from "../utils/auth";
 
 const CompanyDashboard = () => {
   const [addProperty, setAddProperty] = useState(false);
-  const { loading, data } = useQuery(QUERY_USERS);
-  const properties = data?.getUsers.map((user) => user.properties);
-  console.log(properties, "properties");
-  
+  const { loading, data } = useQuery(QUERY_ME);
+  console.log(data);
+  const properties = data?.me?.properties;
+  console.log(properties);
 
   console.log(data);
 
@@ -87,7 +87,7 @@ const CompanyDashboard = () => {
                 <h1 className="text-2xl">Properties</h1>
                 {loading
                   ? null
-                  : properties[0].map((property) => (
+                  : properties.map((property) => (
                       <div
                         className="block p-6 w-full rounded-lg shadow-2xl"
                         key={property.id}
@@ -96,37 +96,41 @@ const CompanyDashboard = () => {
                           {property.name}
                         </h5>
                         <p className="font-normal">
-                          {property.address}, {property.city}, {property.state} {property.zip}{" "}
-                          <br />
+                          {property.address}, {property.city}, {property.state}{" "}
+                          {property.zip} <br />
                         </p>
                       </div>
-                    ))}
+                    ))}{" "}
               </div>
               <div className="w-full lg:w-1/3 px-12 text-gray-300  border-gray-300 flex flex-col items-center py-10">
                 <h2 className="text-3xl text-gray-300 mb-3 font-bold">Inbox</h2>
-                    <div className="w-full text-sm font-medium border-gray-200 bg-transparent">
-                      <h2 className="flex font-semibold justify-center text-2xl mb-3">Maintenance</h2>
-                      <Link
-                        to={`/owner-dashboard/maintenance/${Auth.getToken()}`}
-                        id="tenant-list"
-                        key="maintenance-1"
-                        className="flex justify-between w-full px-4 py-2 text-white border-b border-gray-200 cursor-pointer hover:bg-yellow-600 hover:text-white mb-2"
-                      >
-                        <p>Type: Electrical</p>
-                        <p>From: Broadway building apt 102</p>
-                      </Link>
-                    </div>
-                    <div className="w-full text-sm font-medium border-gray-200 bg-transparent">
-                      <h2 className="flex font-semibold justify-center text-2xl mb-3 mt-3">Feedback</h2>
-                      <Link
-                        to={`/owner-dashboard/feedback/${Auth.getToken()}`}
-                        id="tenant-list"
-                        key="tenant-list"
-                        className="flex justify-between w-full px-4 py-2 text-white border-b border-gray-200 cursor-pointer hover:bg-yellow-600 hover:text-white mb-2"
-                      >
-                        <p>Broadway building apt 102</p>
-                      </Link>
-                    </div>
+                <div className="w-full text-sm font-medium border-gray-200 bg-transparent">
+                  <h2 className="flex font-semibold justify-center text-2xl mb-3">
+                    Maintenance
+                  </h2>
+                  <Link
+                    to={`/owner-dashboard/maintenance/${Auth.getToken()}`}
+                    id="tenant-list"
+                    key="maintenance-1"
+                    className="flex justify-between w-full px-4 py-2 text-white border-b border-gray-200 cursor-pointer hover:bg-yellow-600 hover:text-white mb-2"
+                  >
+                    <p>Type: Electrical</p>
+                    <p>From: Broadway building apt 102</p>
+                  </Link>
+                </div>
+                <div className="w-full text-sm font-medium border-gray-200 bg-transparent">
+                  <h2 className="flex font-semibold justify-center text-2xl mb-3 mt-3">
+                    Feedback
+                  </h2>
+                  <Link
+                    to={`/owner-dashboard/feedback/${Auth.getToken()}`}
+                    id="tenant-list"
+                    key="tenant-list"
+                    className="flex justify-between w-full px-4 py-2 text-white border-b border-gray-200 cursor-pointer hover:bg-yellow-600 hover:text-white mb-2"
+                  >
+                    <p>Broadway building apt 102</p>
+                  </Link>
+                </div>
               </div>
             </div>
             {/* Card code block end */}

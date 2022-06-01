@@ -111,13 +111,15 @@ const resolvers = {
       throw new AuthenticationError("You need to be logged in!");
     },
     attachTenant: async (parent, { propertyId }, context) => {
+      console.log(propertyId);
       if (context.user && context.identity.role === "TENANT") {
+        console.log("inside attachTenant");
         const property = await Property.findOneAndUpdate(
           { _id: propertyId, tenant: null },
           { $push: { tenants: context.user._id } },
           { new: true }
         );
-
+        console.log(property);
         return property;
       }
 
