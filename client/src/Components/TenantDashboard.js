@@ -42,8 +42,8 @@ const TenantDashboard = () => {
   
   const [request, setRequest] = useState({
     propertyId: "",
-    firstName: me?.firstName,
-    lastName: me?.lastName,
+    firstName: "",
+    lastName: "",
     type: "",
     unitNumber: "",
     moreInfo: "",
