@@ -1,24 +1,55 @@
 import React, { useState } from "react";
 import "../index.css";
-import { button } from "../style";
+import { button, label } from "../style";
 import AddProperty from "./AddProperty";
 import { useQuery } from "@apollo/client";
 import { QUERY_ME } from "../utils/queries";
-import { Link } from "react-router-dom";
-import Auth from "../utils/auth";
+import { QUERY_PROPERTY } from "../utils/queries";
 
 const CompanyDashboard = () => {
   const [addProperty, setAddProperty] = useState(false);
   const { loading, data } = useQuery(QUERY_ME);
-  console.log(data);
+  // on click on property, show all requests
+  const propertyClickHandler = (property) => {
+    const propertyId = property.id;
+    localStorage.setItem("ownerPropertyId", propertyId);
+  };
+  const {
+    loading: LoadingProperty,
+    error: ErrorProperty,
+    data: DataProperty,
+  } = useQuery(QUERY_PROPERTY, {
+    variables: {
+      getPropertyId: localStorage.getItem("ownerPropertyId"),
+    },
+  });
+  const sentRequests = DataProperty?.getProperty.requests;
+  LoadingProperty && console.log("Loading Property");
+  ErrorProperty && console.log("Error Property");
+  console.log(sentRequests, "sentRequests");
+
   const properties = data?.me?.properties;
-  console.log(properties);
 
   console.log(data);
 
   const addPropertyHandler = () => {
     setAddProperty(!addProperty);
   };
+
+  const status = [
+    {
+      id: 1,
+      name: "PENDING",
+    },
+    {
+      id: 2,
+      name: "APPROVED",
+    },
+    {
+      id: 3,
+      name: "REJECTED",
+    },
+  ];
 
   return (
     <>
@@ -57,7 +88,7 @@ const CompanyDashboard = () => {
                   </div>
                   <div className="px-5 mb-6 lg:mx-3 xl:mx-6 lg:px-4 xl:px-8 border-l">
                     <h2 className="text-gray-300 dark:text-gray-100 text-2xl leading-6 mb-2 text-center">
-                    {loading ? "Loading..." : data.me.properties.length}
+                      {loading ? "Loading..." : data.me.properties.length}
                     </h2>
                     <p className="text-gray-300 dark:text-gray-100 text-sm leading-5">
                       Properties
@@ -79,8 +110,9 @@ const CompanyDashboard = () => {
                   ? null
                   : properties.map((property) => (
                       <div
-                        className="block p-6 w-full rounded-lg shadow-2xl"
+                        className="cursor-pointer block p-6 w-full rounded-lg shadow-2xl"
                         key={property.id}
+                        onClick={() => propertyClickHandler(property)}
                       >
                         <h5 className="mb-2 text-2xl font-bold tracking-tight mt-2">
                           {property.name}
@@ -98,28 +130,33 @@ const CompanyDashboard = () => {
                   <h2 className="flex font-semibold justify-center text-2xl mb-3">
                     Maintenance
                   </h2>
-                  <Link
-                    to={`/owner-dashboard/maintenance/${Auth.getToken()}`}
-                    id="tenant-list"
-                    key="maintenance-1"
-                    className="flex justify-between w-full px-4 py-2 text-white border-b border-gray-200 cursor-pointer hover:bg-yellow-600 hover:text-white mb-2"
-                  >
-                    <p>Type: Electrical</p>
-                    <p>From: Broadway building apt 102</p>
-                  </Link>
-                </div>
-                <div className="w-full text-sm font-medium border-gray-200 bg-transparent">
-                  <h2 className="flex font-semibold justify-center text-2xl mb-3 mt-3">
-                    Feedback
-                  </h2>
-                  <Link
-                    to={`/owner-dashboard/feedback/${Auth.getToken()}`}
-                    id="tenant-list"
-                    key="tenant-list"
-                    className="flex justify-between w-full px-4 py-2 text-white border-b border-gray-200 cursor-pointer hover:bg-yellow-600 hover:text-white mb-2"
-                  >
-                    <p>Broadway building apt 102</p>
-                  </Link>
+                  {LoadingProperty ? null : sentRequests.length === 0 ? (
+                    <p className="text-center text-gray-300 dark:text-gray-100">
+                      No Requests
+                    </p>
+                  ) : (
+                    sentRequests.map((request) => (
+                      <div
+                        key={request.id}
+                        className="flex justify-between w-full text-white border-b border-gray-200 mb-4"
+                      >
+                        <p>Type: {request.type}</p>
+                        <select className="block w-30 text text-gray-300 bg-transparent border-0 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-yellow-400 peer">
+                          {status.map((status) => (
+                            <>
+                              <option
+                                className="bg-pink-900 text-gray-300"
+                                key={status.id}
+                              >
+                                {status.name}
+                              </option>
+                            </>
+                          ))}
+                        </select>
+                        <p>From: Unit: {request.unitNumber}</p>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </div>
