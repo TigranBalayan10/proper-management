@@ -1,7 +1,7 @@
 const { gql } = require("apollo-server-express");
 
 const typeDefs = gql`
-  type User {
+type User {
     id: ID!
     firstName: String
     lastName: String
@@ -13,7 +13,7 @@ const typeDefs = gql`
   }
 
   type Request {
-    id: ID!
+    id: String!
     moreInfo: String
     type: Type!
     firstName: String!
@@ -43,7 +43,7 @@ const typeDefs = gql`
   }
 
   type Property {
-    id: ID
+    id: ID!
     name: String!
     address: String
     city: String
@@ -100,9 +100,6 @@ const typeDefs = gql`
     ): Property!
 
     login(email: String!, password: String!, role: Role!): Auth!
-
-    deleteProperty(id: ID!): Property!
-    deleteUser(id: ID!): User!
   }
 `;
 
