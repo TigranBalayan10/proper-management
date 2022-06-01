@@ -49,8 +49,7 @@ function Nav() {
         <ul
           className={`md:flex md:items-center md:pb-0 absolute gap-10 md:static md:z-auto z-[-1] left-0 w-full md:w-auto md:pl-0 pl-9 transition-all duration-200 ease-in ${
             open ? "bg-burger" : "top-[-490px]"
-          }`}
-        >
+          }`}        >
           {Auth.loggedIn() ? (
             <>
               <li className="md:ml-8 text-xl md:my-0 my-7">

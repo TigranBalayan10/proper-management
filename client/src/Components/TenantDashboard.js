@@ -3,7 +3,7 @@ import "../index.css";
 import { label, button, numinput, inputdash } from "../style";
 import { QUERY_PROPERTIES } from "../utils/queries";
 import { useQuery } from "@apollo/client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { ATTACH_TENANT } from "../utils/mutations";
 import { QUERY_ME } from "../utils/queries";
@@ -25,21 +25,6 @@ const TenantDashboard = () => {
   const me = dataMe?.me;
   const properties = data?.getProperties;
 
-  // useEffect get property id from properies
-  useEffect(() => {
-    if (properties) {
-      const propertyId = properties.find((property) => {
-        console.log(property, "property");
-        if (property.tenants.id === me.id) {
-          return property.id;
-        }
-      });
-      setGetPropertyId({
-        propertyId: propertyId,
-      });
-    }
-  }, [properties]);
-  
   const [request, setRequest] = useState({
     propertyId: "",
     firstName: "",
@@ -48,11 +33,6 @@ const TenantDashboard = () => {
     unitNumber: "",
     moreInfo: "",
   });
-
- 
-  const propertyId = properties?.filter(
-    (property) => property.id === getPropertyId
-  );
 
   const handleChangeRequest = (event) => {
     const { name, value } = event.target;
@@ -68,7 +48,9 @@ const TenantDashboard = () => {
     try {
       const { data } = await addRequest({
         variables: {
-          ...request,          
+          ...request,
+          firstName: me?.firstName,
+          lastName: me?.lastName,
         },
       });
       console.log(data);
@@ -100,11 +82,9 @@ const TenantDashboard = () => {
     event.preventDefault();
     console.log(getPropertyId, "submit form");
     try {
-      const result = await attachTenant({
+      await attachTenant({
         variables: getPropertyId,
       });
-
-      window.location.reload();
     } catch (e) {
       console.log(e);
     }
@@ -165,39 +145,36 @@ const TenantDashboard = () => {
                 <p className="text-gray-300 dark:text-gray-100 text-sm tracking-normal font-normal mb-8 text-center w-10/12">
                   Broadway Enterprise
                 </p>
-                {handleFormSubmit ? null : (
-                  <div className="relative z-0 w-full mb-6 mt-6 group">
-                    <label className={label}>Add Property</label>
+                <div className="relative z-0 w-full mb-6 mt-6 group">
+                  <label className={label}>Add Property</label>
 
-                    <select
-                      className={inputdash}
-                      name="propertyId"
-                      value={getPropertyId}
-                      onChange={handleChange}
-                    >
-                      <option value="">Select Property</option>
-                      {loading
-                        ? null
-                        : properties.map((property) => (
-                            <option
-                              key={property.id}
-                              value={property.id}
-                              className="bg-pink-900 text-gray-300"
-                            >
-                              {property.name}
-                            </option>
-                          ))}
-                    </select>
+                  <select
+                    className={inputdash}
+                    id="propertyId"
+                    name="propertyId"
+                    value={getPropertyId}
+                    onChange={handleChange}
+                  >
+                    {loading
+                      ? null
+                      : properties.map((property) => (
+                          <option
+                            key={property.name}
+                            value={property.id}
+                            className="bg-pink-900 text-gray-300"
+                          >
+                            {property.name}
+                          </option>
+                        ))}
+                  </select>
 
-                    <button
-                      type="submit"
-                      className="px-3 py-2 mt-3 text-sm font-medium text-center text-white bg-pink-900 rounded-lg hover:bg-pink-800 focus:ring-4 focus:outline-none focus:ring-pink-300"
-                    >
-                      + ADD
-                    </button>
-                  </div>
-                )}
-
+                  <button
+                    type="submit"
+                    className="px-3 py-2 mt-3 text-sm font-medium text-center text-white bg-pink-900 rounded-lg hover:bg-pink-800 focus:ring-4 focus:outline-none focus:ring-pink-300"
+                  >
+                    + ADD
+                  </button>
+                </div>
                 <div className="relative z-0 mb-6 mt-5">
                   <input type="number" className={numinput}></input>
                   <label className={label}>Rent Amount</label>
@@ -218,6 +195,13 @@ const TenantDashboard = () => {
                     name="type"
                     onChange={handleChangeRequest}
                   >
+                    <option
+                      value=""
+                      className="bg-pink-900 text-gray-300"
+                      disabled
+                    >
+                      Select Maintenance Type
+                    </option>
                     {maintenanceTypes.map((type) => (
                       <option
                         key={type.id}
