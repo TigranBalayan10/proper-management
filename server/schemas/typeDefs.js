@@ -61,6 +61,7 @@ const typeDefs = gql`
     me: User
     getUsers: [User]
     getUser(_id: ID!): User
+    getTenant: User
     getProperties: [Property]
     getProperty(id: ID!): Property!
   }

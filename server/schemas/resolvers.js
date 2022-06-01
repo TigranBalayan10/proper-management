@@ -7,9 +7,7 @@ const resolvers = {
     me: async (parent, args, context) => {
       console.log("context", context.user);
       if (context.user) {
-        const userData = await User.findOne({ _id: context.user._id }).populate(
-          "properties"
-        );
+        const userData = await User.findOne({ _id: context.user._id }).populate('properties');
 
         return userData;
       }
@@ -29,6 +27,16 @@ const resolvers = {
     getProperty: async (parent, { id }) => {
       const property = await Property.findOne({ _id: id });
       return property;
+    },
+
+    getTenant: async (parent, args, context) => {
+      if (context.user) {
+        const tenant = await User.findOne({ _id: context.identity._id })
+        .populate('properties')
+        return tenant;
+      }
+
+      throw new AuthenticationError("You must be logged in to view this data");
     },
 
     getUsers: async (parent, args) => {
@@ -95,6 +103,12 @@ const resolvers = {
         const property = await Property.findOneAndUpdate(
           { _id: propertyId, tenant: null },
           { $push: { tenants: context.user._id } },
+          { new: true }
+        );
+
+        const user = await User.findOneAndUpdate(
+          { _id: context.identity._id },
+          { $push: { properties: propertyId } },
           { new: true }
         );
 
