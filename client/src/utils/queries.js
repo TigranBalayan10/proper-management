@@ -66,3 +66,48 @@ export const QUERY_USERS = gql`
     }
   }
 `;
+
+export const QUERY_TENANT = gql`
+  query GetTenant {
+    getTenant {
+      id
+      firstName
+      lastName
+      phoneNumber
+      properties {
+        id
+        name
+        address
+        city
+        state
+        zip
+        requests {
+          status
+        }
+      }
+    }
+  }
+`;
+
+export const QUERY_PROPERTY = gql`
+  query GetProperty($getPropertyId: ID!) {
+    getProperty(id: $getPropertyId) {
+      id
+      name
+      address
+      city
+      state
+      zip
+      requests {
+        id
+        moreInfo
+        type
+        firstName
+        lastName
+        status
+        createdAt
+        unitNumber
+      }
+    }
+  }
+`;

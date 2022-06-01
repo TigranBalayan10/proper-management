@@ -1,5 +1,10 @@
 const { Schema } = require("mongoose");
-const dateFormat = require("../utils/dateFormat");
+// const dateFormat = require("../utils/dateFormat");
+
+const dateFormat = (date) => {
+  return date.toLocaleDateString('en-US');
+};
+
 
 const requestSchema = new Schema({
   moreInfo: {

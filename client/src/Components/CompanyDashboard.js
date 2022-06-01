@@ -40,37 +40,27 @@ const CompanyDashboard = () => {
                   />
                 </div>
                 <h2 className="text-gray-300 dark:text-gray-100 text-xl tracking-normal font-medium mb-1">
-                  Enterprise Properties
+                  {loading ? "Loading..." : data.me.firstName}{" "}
+                  {loading ? "Loading..." : data.me.lastName}
                 </h2>
-                <p className="flex text-gray-300 dark:text-gray-100 text-sm tracking-normal font-normal mb-3 text-center">
+                <h3 className="flex text-gray-300 dark:text-gray-100 text-sm tracking-normal font-normal mb-3 text-center">
                   Glendale, California
-                </p>
-                <p className="text-gray-300 dark:text-gray-100 text-sm tracking-normal font-normal mb-8 text-center w-10/12">
-                  Properties owned all over the US and Canada.
-                </p>
-                <div className="flex items-start">
-                  <div className>
+                </h3>
+                <div className="flex justify-evenly">
+                  <div className="mx-6 mb-6 lg:mx-4 xl:mx-4 lg:px-4 xl:px-4">
                     <h2 className="text-gray-300 dark:text-gray-100 text-2xl leading-6 mb-2 text-center">
-                      125
+                      12
                     </h2>
                     <p className="text-gray-300 dark:text-gray-100 text-sm leading-5">
                       Rented
                     </p>
                   </div>
-                  <div className="mx-6 lg:mx-3 xl:mx-6 px-8 lg:px-4 xl:px-8 border-l border-r">
+                  <div className="px-5 mb-6 lg:mx-3 xl:mx-6 lg:px-4 xl:px-8 border-l">
                     <h2 className="text-gray-300 dark:text-gray-100 text-2xl leading-6 mb-2 text-center">
-                      34
+                    {loading ? "Loading..." : data.me.properties.length}
                     </h2>
                     <p className="text-gray-300 dark:text-gray-100 text-sm leading-5">
                       Properties
-                    </p>
-                  </div>
-                  <div className="mb-5">
-                    <h2 className="text-gray-300 dark:text-gray-100 text-2xl leading-6 mb-2 text-center">
-                      3
-                    </h2>
-                    <p className="text-gray-300 dark:text-gray-100 text-sm leading-5">
-                      Commercial
                     </p>
                   </div>
                 </div>
