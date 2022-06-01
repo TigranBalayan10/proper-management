@@ -3,17 +3,18 @@ import "../index.css";
 import { button } from "../style";
 import AddProperty from "./AddProperty";
 import { useQuery } from "@apollo/client";
-import { QUERY_USERS } from "../utils/queries";
-import { QUERY_PROPERTIES } from "../utils/queries";
+import { QUERY_ME } from "../utils/queries";
 import { Link } from "react-router-dom";
+import Auth from "../utils/auth";
 
 const CompanyDashboard = () => {
   const [addProperty, setAddProperty] = useState(false);
-  const { loading, data } = useQuery(QUERY_PROPERTIES);
-  const { loading: loadingTenants, data: getTenants } = useQuery(QUERY_USERS);
+  const { loading, data } = useQuery(QUERY_ME);
+  console.log(data);
+  const properties = data?.me?.properties;
+  console.log(properties);
 
-  console.log(getTenants);
-  const tenants = getTenants?.getUsers.filter((user) => user.role === "TENANT");
+  console.log(data);
 
   const addPropertyHandler = () => {
     setAddProperty(!addProperty);
@@ -82,44 +83,54 @@ const CompanyDashboard = () => {
                 </button>
                 {addProperty ? <AddProperty /> : null}
               </div>
-              <div className="w-full lg:w-1/3 px-12 border-t border-b lg:border-t-0 lg:border-b-0 lg:border-l lg:border-r  flex flex-col items-center py-10">
-                <h2 className="text-2xl text-gray-300 mb-3">Tenants</h2>
-                {loadingTenants ? (
-                  <p>Loading...</p>
-                ) : (
-                  tenants.map((tenant) => (
-                <div className="w-full text-sm font-medium border-gray-200 bg-transparent">
-                  <Link
-                    to="/tenants"
-                    id="tenant-list"
-                    key={tenant.id}
-                    className="block w-full px-4 py-2 text-white border-b border-gray-200 cursor-pointer hover:bg-yellow-600 hover:text-white mb-2"
-                  >
-                    {tenant.firstName} {tenant.lastName}
-                  </Link>
-                </div>
-                )))}
-              </div>
-              <div className="w-full lg:w-1/3 px-12 text-gray-300  border-gray-300 flex flex-col items-center py-10">
+              <div className="w-full lg:w-1/3 px-12 border-t border-b lg:border-t-0 lg:border-b-0 lg:border-l text-gray-300 lg:border-r  flex flex-col items-center py-10">
                 <h1 className="text-2xl">Properties</h1>
                 {loading
                   ? null
-                  : data.getProperties.map((property) => (
+                  : properties.map((property) => (
                       <div
-                        class="block p-6 max-w-sm rounded-lg shadow-2xl  dark:bg-gray-800"
+                        className="block p-6 w-full rounded-lg shadow-2xl"
                         key={property.id}
                       >
-                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-300 mt-2">
+                        <h5 className="mb-2 text-2xl font-bold tracking-tight mt-2">
                           {property.name}
                         </h5>
-                        <p class="font-normal text-gray-300 dark:text-gray-400">
-                          {property.address} <br />
-                          {property.city}, {property.state} {property.zip}{" "}
-                          <br />
-                          Number of Apartments: {property.numberOfApartments}
+                        <p className="font-normal">
+                          {property.address}, {property.city}, {property.state}{" "}
+                          {property.zip} <br />
                         </p>
                       </div>
-                    ))}
+                    ))}{" "}
+              </div>
+              <div className="w-full lg:w-1/3 px-12 text-gray-300  border-gray-300 flex flex-col items-center py-10">
+                <h2 className="text-3xl text-gray-300 mb-3 font-bold">Inbox</h2>
+                <div className="w-full text-sm font-medium border-gray-200 bg-transparent">
+                  <h2 className="flex font-semibold justify-center text-2xl mb-3">
+                    Maintenance
+                  </h2>
+                  <Link
+                    to={`/owner-dashboard/maintenance/${Auth.getToken()}`}
+                    id="tenant-list"
+                    key="maintenance-1"
+                    className="flex justify-between w-full px-4 py-2 text-white border-b border-gray-200 cursor-pointer hover:bg-yellow-600 hover:text-white mb-2"
+                  >
+                    <p>Type: Electrical</p>
+                    <p>From: Broadway building apt 102</p>
+                  </Link>
+                </div>
+                <div className="w-full text-sm font-medium border-gray-200 bg-transparent">
+                  <h2 className="flex font-semibold justify-center text-2xl mb-3 mt-3">
+                    Feedback
+                  </h2>
+                  <Link
+                    to={`/owner-dashboard/feedback/${Auth.getToken()}`}
+                    id="tenant-list"
+                    key="tenant-list"
+                    className="flex justify-between w-full px-4 py-2 text-white border-b border-gray-200 cursor-pointer hover:bg-yellow-600 hover:text-white mb-2"
+                  >
+                    <p>Broadway building apt 102</p>
+                  </Link>
+                </div>
               </div>
             </div>
             {/* Card code block end */}

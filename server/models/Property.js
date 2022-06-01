@@ -38,6 +38,7 @@ const propertySchema = new Schema(
                 ref: 'User'
             }
         ],
+        requests: [requestSchema]
     }
 )
 

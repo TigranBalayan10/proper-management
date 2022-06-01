@@ -12,7 +12,6 @@ const AddProperty = () => {
     city: "",
     state: "",
     zip: "",
-    numberOfApartments: [],
   });
 
   const handleChange = (event) => {
@@ -28,20 +27,28 @@ const AddProperty = () => {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try {
-      await addProp({
-        variables: { ...formState }
+      const { data } = await addProp({
+        variables: { ...formState },
       });
-      console.log("property added");
+      console.log(data);
       window.location.reload();
     } catch (e) {
-      console.error(e);
+      console.log(e);
     }
+    // clear form values
+    setFormState({
+      name: "",
+      address: "",
+      city: "",
+      state: "",
+      zip: "",
+    });
   };
 
   return (
     <form onSubmit={handleFormSubmit}>
       <div className="grid xl:grid-cols-2 xl:gap-6 mt-4">
-        <div className="relative z-0 w-full mb-6 group">
+        <div className="relative z-0 w-full group">
           <input
             type="text"
             name="name"
@@ -52,18 +59,7 @@ const AddProperty = () => {
           ></input>
           <label className={label}>Property Name</label>
         </div>
-        <div className="relative z-0 w-full mb-6 group">
-          <input
-            type="text"
-            name="numberOfApartments"
-            id="numberOfApartments"
-            onChange={handleChange}
-            className={input}
-            placeholder=" "
-          ></input>
-          <label className={label}>Apartment quantity</label>
-        </div>
-        <div className="relative z-0 w-full mb-6 group">
+        <div className="relative z-0 w-full group">
           <input
             type="text"
             name="address"
@@ -74,7 +70,7 @@ const AddProperty = () => {
           ></input>
           <label className={label}>Address</label>
         </div>
-        <div className="relative z-0 w-full mb-6 group">
+        <div className="relative z-0 w-full group">
           <input
             type="text"
             name="city"
@@ -85,8 +81,6 @@ const AddProperty = () => {
           ></input>
           <label className={label}>City</label>
         </div>
-      </div>
-      <div className="grid xl:grid-cols-2 xl:gap-6">
         <div className="relative z-0 w-full mb-6 group">
           <input
             type="text"
@@ -98,6 +92,8 @@ const AddProperty = () => {
           ></input>
           <label className={label}>State</label>
         </div>
+      </div>
+      <div className="grid xl:grid-cols-2 xl:gap-6">
         <div className="relative z-0 w-full mb-6 group">
           <input
             type="number"

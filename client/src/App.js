@@ -15,6 +15,7 @@ import Home from "./Pages/Home";
 import RegistrationSuccess from "./Components/RegistrationSuccess";
 import CompanyDashboard from "./Components/CompanyDashboard";
 import TenantDashboard from "./Components/TenantDashboard";
+import Maintenance from "./Components/Maintenance";
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -37,7 +38,9 @@ const client = new ApolloClient({
 
 const token = localStorage.getItem("id_token");
 
+
 function App() {
+
   return (
     <ApolloProvider client={client}>
       <Router>
@@ -51,6 +54,7 @@ function App() {
               <Route path={`/owner-dashboard/${token}`} element={<CompanyDashboard />} />
               <Route path={`/tenant-dashboard/${token}`} element={<TenantDashboard />} />
               <Route path="/success" element={<RegistrationSuccess />} />
+              <Route path={`/owner-dashboard/maintenance/${token}`} element={<Maintenance />} />
             </Routes>
           </main>
         </div>
