@@ -29,7 +29,7 @@ const Home = () => {
               <p className="font-normal text-gray-700 dark:text-gray-400 mb-5 text-xl">
                 Login and manage your payments to your landlord. Give feedback and order repair.
               </p>
-              <Link to="/login-tenant" type="button" className={button}>Tenant Login</Link>
+              <Link to="/login" type="button" className={button}>Tenant Login</Link>
             </div>
             <div className="block p-6  rounded-lg shadow-md" id="card-home">
               <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">

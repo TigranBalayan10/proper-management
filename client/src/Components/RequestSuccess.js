@@ -2,12 +2,8 @@ import React from "react";
 import {buttonSmall} from "../style";
 import { useState } from "react";
 
-const RequestSuccess = () => {
-    const [ok, setOk] = useState(false);
-    const okHandler = () => {
-        setOk(true);
-        console.log("ok");
-    };
+const RequestSuccess =({okHandler}) => {
+   
   return (
       
     <div className="flex justify-center text-gray-300">

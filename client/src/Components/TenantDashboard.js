@@ -11,6 +11,7 @@ import { QUERY_TENANT, QUERY_PROPERTY } from "../utils/queries";
 import RequestSuccess from "./RequestSuccess";
 
 const TenantDashboard = () => {
+  const [showHiddenComponent, setShowHiddenComponent] = useState(false);
   const { loading, error, data } = useQuery(QUERY_PROPERTIES);
   console.log(data, "data");
   const [attachTenant, { error: errorAttachTenant }] =
@@ -38,7 +39,7 @@ const TenantDashboard = () => {
       getPropertyId: localStorage.getItem("propertyId"),
     },
   });
-  const sentRequests = DataProperty?.getProperty.requests;
+  const sentRequests = DataProperty?.getProperty?.requests;
 
   const [request, setRequest] = useState({
     propertyId: "",
@@ -50,7 +51,6 @@ const TenantDashboard = () => {
   });
 
   console.log(request);
-
 
   const handleChangeRequest = (event) => {
     const { name, value } = event.target;
@@ -64,6 +64,7 @@ const TenantDashboard = () => {
   };
 
   const handleSubmitRequest = async (event) => {
+    setShowHiddenComponent(true);
     console.log(request, "request input");
     event.preventDefault();
     try {
@@ -103,7 +104,7 @@ const TenantDashboard = () => {
       await attachTenant({
         variables: getPropertyId,
       });
-
+      window.location.reload();
       localStorage.setItem("propertyId", getPropertyId.propertyId);
     } catch (e) {
       console.log(e);
@@ -155,49 +156,67 @@ const TenantDashboard = () => {
                     className="w-full h-full overflow-hidden object-cover rounded-full"
                   />
                 </div>
-                <h2 className="text-gray-300 dark:text-gray-100 text-xl tracking-normal font-medium mb-1">
+                <h2 className="text-gray-300 dark:text-gray-100 text-xl tracking-normal font-medium mb-4">
                   {loadingTenant ? "Loading..." : tenants?.firstName}{" "}
                   {loadingTenant ? "Loading..." : tenants?.lastName}
                 </h2>
-                <p className="flex text-gray-300 dark:text-gray-100 text-sm tracking-normal font-normal mb-3 text-center">
-                  {loadingTenant ? "Loading..." : tenantProperty[0]?.address},{" "}
-                  {loadingTenant ? null : tenantProperty[0]?.city},{" "}
-                  {loadingTenant ? null : tenantProperty[0]?.state}
-                </p>
-                <p className="text-gray-300 dark:text-gray-100 text-sm tracking-normal font-normal mb-8 text-center w-10/12">
-                  {loadingTenant ? "Loading..." : tenantProperty[0]?.name}
-                </p>
-                {}
-                <div className="relative z-0 w-full mb-6 mt-6 group">
-                  <label className={label}>Add Property</label>
 
-                  <select
-                    className={inputdash}
-                    name="propertyId"
-                    value={getPropertyId}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select Property</option>
-                    {loading
-                      ? null
-                      : properties.map((property) => (
-                          <option
-                            key={property.id}
-                            value={property.id}
-                            className="bg-pink-900 text-gray-300"
-                          >
-                            {property.name}
-                          </option>
-                        ))}
-                  </select>
+                {tenantProperty?.length <= 0 ? (
+                  <div className="relative z-0 w-full mb-6 mt-6 group">
+                    <label className={label}>Add Property</label>
 
-                  <button
-                    type="submit"
-                    className="px-3 py-2 mt-3 text-sm font-medium text-center text-white bg-pink-900 rounded-lg hover:bg-pink-800 focus:ring-4 focus:outline-none focus:ring-pink-300"
-                  >
-                    + ATTACH
-                  </button>
-                </div>
+                    <select
+                      className={inputdash}
+                      name="propertyId"
+                      value={getPropertyId}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select Property</option>
+                      {loading
+                        ? null
+                        : properties.map((property) => (
+                            <option
+                              key={property.id}
+                              value={property.id}
+                              className="bg-pink-900 text-gray-300"
+                            >
+                              {property.name}
+                            </option>
+                          ))}
+                    </select>
+
+                    <button
+                      type="submit"
+                      className="px-3 py-2 mt-3 text-sm font-medium text-center text-white bg-pink-900 rounded-lg hover:bg-pink-800 focus:ring-4 focus:outline-none focus:ring-pink-300"
+                    >
+                      + ATTACH
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="flex text-gray-300">
+                      <div id="card" className=" p-4 rounded-3xl shadow-2xl">
+                        <h1 className=" text-gray-300 text-2xl font-bold mb-5">
+                          Your Building is
+                        </h1>
+                        <p className="text-gray-300 dark:text-gray-100 text-xl tracking-normal font-normal mb-2">
+                            {loadingTenant
+                              ? "Loading..."
+                              : tenantProperty[0]?.name}
+                          </p>
+                        <p className=" text-gray-300">
+                          <p className="flex text-gray-300 dark:text-gray-100 text-sm tracking-normal font-normal mb-3 text-center">
+                            {loadingTenant
+                              ? "Loading..."
+                              : tenantProperty[0]?.address}
+                            , {loadingTenant ? null : tenantProperty[0]?.city},{" "}
+                            {loadingTenant ? null : tenantProperty[0]?.state}
+                          </p>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <div className="relative z-0 mb-6 mt-5">
                   <input type="number" className={numinput}></input>
@@ -207,71 +226,78 @@ const TenantDashboard = () => {
                   Pay Rent
                 </button>
               </form>
-              <form
-                className="w-full lg:w-1/3 px-12 border-t border-b lg:border-t-0 lg:border-b-0 lg:border-l lg:border-r border-gray-300 flex flex-col items-center py-10"
-                onSubmit={handleSubmitRequest}
-              >
-                <h1 className="text-2xl text-white">Request Maintenance</h1>
-                <div className="relative z-0 w-full mb-6 mt-6 group">
-                  <label className={label}>Choose Maintenance Type</label>
-                  <select
-                    className={inputdash}
-                    name="type"
-                    onChange={handleChangeRequest}
-                  >
-                    {maintenanceTypes.map((type) => (
-                      <option
-                        key={type.id}
-                        className="bg-pink-900 text-gray-300"
+              <div className="w-full lg:w-1/3 px-12 border-t border-b lg:border-t-0 lg:border-b-0 lg:border-l lg:border-r border-gray-300 flex flex-col items-center py-10">
+                {showHiddenComponent ? (
+                  <RequestSuccess
+                    okHandler={() => {
+                      setShowHiddenComponent(false);
+                    }}
+                  />
+                ) : (
+                  <form className="w-full" onSubmit={handleSubmitRequest}>
+                    <h1 className="text-2xl text-white">Request Maintenance</h1>
+                    <div className="relative z-0 w-full mb-6 mt-6 group">
+                      <label className={label}>Choose Maintenance Type</label>
+                      <select
+                        className={inputdash}
+                        name="type"
+                        onChange={handleChangeRequest}
                       >
-                        {type.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="relative z-0 mb-3">
-                  <input
-                    type="number"
-                    name="unitNumber"
-                    onChange={handleChangeRequest}
-                    className={numinput}
-                  ></input>
-                  <label className={label}>Apartment Number</label>
-                </div>
-                <label className="block mb-2 text-xl font-medium text-gray-300 dark:text-gray-400">
-                  More Info
-                </label>
-                <textarea
-                  id="message"
-                  name="moreInfo"
-                  onChange={handleChangeRequest}
-                  rows="4"
-                  className="block p-2.5 w-full text-sm text-gray-900 bg-gray-200 rounded-lg border-1 border-yellow-600 focus:ring-yellow-500 focus:border-yellow-500 mb-4"
-                  placeholder="Your message..."
-                ></textarea>
-                <button type="submit"  className={button}>
-                  Request
-                </button>
-              </form>
+                        {maintenanceTypes.map((type) => (
+                          <option
+                            key={type.id}
+                            className="bg-pink-900 text-gray-300"
+                          >
+                            {type.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="relative z-0 mb-3">
+                      <input
+                        type="number"
+                        name="unitNumber"
+                        onChange={handleChangeRequest}
+                        className={numinput}
+                      ></input>
+                      <label className={label}>Apartment Number</label>
+                    </div>
+                    <label className="block mb-2 text-xl font-medium text-gray-300 dark:text-gray-400">
+                      More Info
+                    </label>
+                    <textarea
+                      id="message"
+                      name="moreInfo"
+                      onChange={handleChangeRequest}
+                      rows="4"
+                      className="block p-2.5 w-full text-sm text-gray-900 bg-gray-200 rounded-lg border-1 border-yellow-600 focus:ring-yellow-500 focus:border-yellow-500 mb-4"
+                      placeholder="Your message..."
+                    ></textarea>
+                    <button type="submit" className={button}>
+                      Request
+                    </button>
+                  </form>
+                )}
+              </div>
               <div className="w-full lg:w-1/3 px-12 text-gray-300  border-gray-300 flex flex-col items-center py-10">
                 <h2 className="text-2xl text-gray-300 mb-3">Request Status</h2>
                 <div className="w-full text-sm font-medium border-gray-200 bg-transparent">
                   <h2 className="flex font-semibold justify-center text-2xl mb-3">
                     Maintenance
                   </h2>
-                  {LoadingProperty? null :  sentRequests.map((request) => (
-                  <p
-                    
-                  id="tenant-list"
-                  key={request.id}
-                  className="flex justify-between w-full px-4 py-2 text-white border-b border-gray-200 cursor-pointer hover:bg-yellow-600 hover:text-white mb-2"
-                >
-                  <p>{request.type}</p>
-                  <p>Status: {request.status}</p>
-                  <p>sent: {request.createdAt}</p>
-                </p>  
-                  ))}
-
+                  {LoadingProperty || ErrorProperty
+                    ? null
+                    : sentRequests.map((request) => (
+                        <p
+                          id="tenant-list"
+                          key={request.id}
+                          className="flex justify-between w-full px-4 py-2 text-white border-b border-gray-200 cursor-pointer hover:bg-yellow-600 hover:text-white mb-2"
+                        >
+                          <p>{request.type}</p>
+                          <p>Status: {request.status}</p>
+                          <p>sent: {request.createdAt}</p>
+                        </p>
+                      ))}
                 </div>
               </div>
             </div>

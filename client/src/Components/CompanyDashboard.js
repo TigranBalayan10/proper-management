@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../index.css";
 import { button, label } from "../style";
 import AddProperty from "./AddProperty";
@@ -7,26 +7,30 @@ import { QUERY_ME } from "../utils/queries";
 import { QUERY_PROPERTY } from "../utils/queries";
 
 const CompanyDashboard = () => {
+  const propertyIdLocalStorage = localStorage.getItem("propertyId");
+  const [propertyId, setPropertyId] = useState(propertyIdLocalStorage);
   const [addProperty, setAddProperty] = useState(false);
   const { loading, data } = useQuery(QUERY_ME);
   // on click on property, show all requests
   const propertyClickHandler = (property) => {
-    const propertyId = property.id;
-    localStorage.setItem("ownerPropertyId", propertyId);
+    setPropertyId(property.id);
   };
+  
   const {
     loading: LoadingProperty,
     error: ErrorProperty,
     data: DataProperty,
   } = useQuery(QUERY_PROPERTY, {
     variables: {
-      getPropertyId: localStorage.getItem("ownerPropertyId"),
+      getPropertyId: propertyId,
     },
   });
-  const sentRequests = DataProperty?.getProperty.requests;
+  const sentRequests = DataProperty?.getProperty?.requests;
+
+  // const [requestState, setRequestState] = useState([]);
+  
   LoadingProperty && console.log("Loading Property");
   ErrorProperty && console.log("Error Property");
-  console.log(sentRequests, "sentRequests");
 
   const properties = data?.me?.properties;
 
@@ -74,13 +78,10 @@ const CompanyDashboard = () => {
                   {loading ? "Loading..." : data.me.firstName}{" "}
                   {loading ? "Loading..." : data.me.lastName}
                 </h2>
-                <h3 className="flex text-gray-300 dark:text-gray-100 text-sm tracking-normal font-normal mb-3 text-center">
-                  Glendale, California
-                </h3>
                 <div className="flex justify-evenly">
                   <div className="mx-6 mb-6 lg:mx-4 xl:mx-4 lg:px-4 xl:px-4">
                     <h2 className="text-gray-300 dark:text-gray-100 text-2xl leading-6 mb-2 text-center">
-                      12
+                      0
                     </h2>
                     <p className="text-gray-300 dark:text-gray-100 text-sm leading-5">
                       Rented
@@ -130,32 +131,42 @@ const CompanyDashboard = () => {
                   <h2 className="flex font-semibold justify-center text-2xl mb-3">
                     Maintenance
                   </h2>
-                  {LoadingProperty ? null : sentRequests.length === 0 ? (
-                    <p className="text-center text-gray-300 dark:text-gray-100">
-                      No Requests
+                  {/* if no data in requests show no data */}
+
+                  {(loading || LoadingProperty)  ? (
+                    <p className="text-gray-300 dark:text-gray-100 text-sm leading-5">
+                      Loading...
                     </p>
                   ) : (
-                    sentRequests.map((request) => (
-                      <div
-                        key={request.id}
-                        className="flex justify-between w-full text-white border-b border-gray-200 mb-4"
-                      >
-                        <p>Type: {request.type}</p>
-                        <select className="block w-30 text text-gray-300 bg-transparent border-0 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-yellow-400 peer">
-                          {status.map((status) => (
-                            <>
-                              <option
-                                className="bg-pink-900 text-gray-300"
-                                key={status.id}
-                              >
-                                {status.name}
-                              </option>
-                            </>
-                          ))}
-                        </select>
-                        <p>From: Unit: {request.unitNumber}</p>
-                      </div>
-                    ))
+                    <>
+                      {(ErrorProperty || sentRequests?.length === 0) ? (
+                        <p className="text-center text-gray-300 dark:text-gray-100">
+                          No Requests
+                        </p>
+                      ) : (
+                        sentRequests.map((request) => (
+                          <div
+                            key={request.id}
+                            className="flex justify-between w-full text-white border-b border-gray-200 mb-4"
+                          >
+                            <p>Type: {request.type}</p>
+                            <select className="block w-30 text text-gray-300 bg-transparent border-0 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-yellow-400 peer">
+                              {status.map((status) => (
+                                <>
+                                  <option
+                                    className="bg-pink-900 text-gray-300"
+                                    key={status.id}
+                                  >
+                                    {status.name}
+                                  </option>
+                                </>
+                              ))}
+                            </select>
+                            <p>From: Unit: {request.unitNumber}</p>
+                          </div>
+                        ))
+                      )}
+                    </>
                   )}
                 </div>
               </div>
