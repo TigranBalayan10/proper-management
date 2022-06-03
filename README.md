@@ -24,7 +24,7 @@ It is also a tool to help tenants to pay their rent, and request maintenance.
 * JWT
 
 ## Contribution
-Made with ❤️ by Shahen Tokhalyan[@Tokhalyan] and Tigran Balayan[@TigranBalayan10]
+Made with ❤️ by Shahen Tokhalyan [@Tokhalyan] and Tigran Balayan [@TigranBalayan10]
 
 ## Screenshots
 ![Screenshot](./client/assets/img/Screenshot.png)
