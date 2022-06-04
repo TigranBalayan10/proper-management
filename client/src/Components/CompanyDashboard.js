@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../index.css";
-import { button, label } from "../style";
+import { button } from "../style";
 import AddProperty from "./AddProperty";
 import { useQuery } from "@apollo/client";
 import { QUERY_ME } from "../utils/queries";

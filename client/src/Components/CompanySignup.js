@@ -57,7 +57,7 @@ const CompanySignup = () => {
             value={formState.firstName}
             onChange={handleChange}
           ></input>
-          <label for="floating_first_name" className={label}>
+          <label htmlFor="floating_first_name" className={label}>
             First name
           </label>
         </div>
@@ -71,7 +71,7 @@ const CompanySignup = () => {
             value={formState.lastName}
             onChange={handleChange}
           ></input>
-          <label for="floating_last_name" className={label}>
+          <label htmlFor="floating_last_name" className={label}>
             Last name
           </label>
         </div>

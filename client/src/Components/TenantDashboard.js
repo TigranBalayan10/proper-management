@@ -1,9 +1,9 @@
 import React from "react";
 import "../index.css";
-import { label, button, numinput, inputdash, buttonSmall } from "../style";
+import { label, button, numinput, inputdash } from "../style";
 import { QUERY_PROPERTIES } from "../utils/queries";
 import { useQuery } from "@apollo/client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { ATTACH_TENANT } from "../utils/mutations";
 import { ADD_REQUEST } from "../utils/mutations";
@@ -288,7 +288,7 @@ const TenantDashboard = () => {
                   {LoadingProperty || ErrorProperty
                     ? null
                     : sentRequests.map((request) => (
-                        <p
+                        <div
                           id="tenant-list"
                           key={request.id}
                           className="flex justify-between w-full px-4 py-2 text-white border-b border-gray-200 cursor-pointer hover:bg-yellow-600 hover:text-white mb-2"
@@ -296,7 +296,7 @@ const TenantDashboard = () => {
                           <p>{request.type}</p>
                           <p>Status: {request.status}</p>
                           <p>sent: {request.createdAt}</p>
-                        </p>
+                        </div>
                       ))}
                 </div>
               </div>

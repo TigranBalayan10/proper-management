@@ -71,13 +71,13 @@ const resolvers = {
       const user = await User.findOne({ email, role }).populate('properties');
 
       if (!user) {
-        throw new AuthenticationError("Incorrect credentials");
+        throw new AuthenticationError("Wrong Email or Password");
       }
 
       const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
-        throw new AuthenticationError("Incorrect credentials");
+        throw new AuthenticationError("Wrong Email or Password");
       }
 
       const token = signToken(user);

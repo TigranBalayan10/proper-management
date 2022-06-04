@@ -1,6 +1,5 @@
 import React from "react";
 import {buttonSmall} from "../style";
-import { useState } from "react";
 
 const RequestSuccess =({okHandler}) => {
    

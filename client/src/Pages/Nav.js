@@ -34,10 +34,10 @@ function Nav() {
             to="/"
             className="font-semibold text-2xl tracking-tight text-white"
           >
-            <p>
+            <div>
               Proper Management <br />
               <p className="text-sm">Making management easy </p>
-            </p>
+            </div>
           </Link>
         </div>
         <div
