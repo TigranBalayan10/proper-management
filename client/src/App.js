@@ -16,6 +16,7 @@ import RegistrationSuccess from "./Components/RegistrationSuccess";
 import CompanyDashboard from "./Components/CompanyDashboard";
 import TenantDashboard from "./Components/TenantDashboard";
 import Maintenance from "./Components/Maintenance";
+import Contact from "./Pages/Contact";
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -49,6 +50,7 @@ function App() {
           <main className="flex-1">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/contact" element={<Contact />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path={`/owner-dashboard/${token}`} element={<CompanyDashboard />} />

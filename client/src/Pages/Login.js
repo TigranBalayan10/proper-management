@@ -4,7 +4,6 @@ import { input, label, button } from "../style";
 import { useMutation } from "@apollo/client";
 import { LOGIN_USER } from "../utils/mutations";
 import Auth from "../utils/auth";
-import { ApolloError } from "@apollo/client";
 
 function Login() {
   const [formState, setFormState] = useState({

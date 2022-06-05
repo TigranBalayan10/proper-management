@@ -118,6 +118,8 @@ const resolvers = {
 
       throw new AuthenticationError("You need to be logged in!");
     },
+
+    
     attachTenant: async (parent, { propertyId }, context) => {
       console.log(propertyId);
       if (context.user && context.identity.role === "TENANT") {

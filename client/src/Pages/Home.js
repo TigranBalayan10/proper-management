@@ -21,7 +21,7 @@ const Home = () => {
               to run your business and scale your vision.
             </p>
           </div>
-          <div className=" flex flex-row gap-6 w-full md:w-3/5 py-6 text-center sm:flex-col sm:w-2">
+          <div className="gap-6 mt-5 w-full md:w-3/5 text-center sm:flex-col sm:w-2">
             <div className="block p-6 rounded-lg shadow-md" id="card-home">
               <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                 For Tenants
@@ -31,7 +31,7 @@ const Home = () => {
               </p>
               <Link to="/login" type="button" className={button}>Tenant Login</Link>
             </div>
-            <div className="block p-6  rounded-lg shadow-md" id="card-home">
+            <div className="block p-7 mt-5 mb-10 rounded-lg shadow-md" id="card-home">
               <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                 For Businesses
               </h5>
