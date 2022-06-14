@@ -3,8 +3,10 @@ import { input, label, button } from "../style";
 import { useMutation } from "@apollo/client";
 import { ADD_PROPERTY } from "../utils/mutations";
 import { useState } from "react";
+import { useStoreContext } from "../utils/GlobalState";
 
 const AddProperty = () => {
+
   const [addProp, { error }] = useMutation(ADD_PROPERTY);
   const [formState, setFormState] = useState({
     name: "",

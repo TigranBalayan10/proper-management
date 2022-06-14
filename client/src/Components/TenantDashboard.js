@@ -3,17 +3,33 @@ import "../index.css";
 import { label, button, numinput, inputdash } from "../style";
 import { QUERY_PROPERTIES } from "../utils/queries";
 import { useQuery } from "@apollo/client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import { ATTACH_TENANT } from "../utils/mutations";
 import { ADD_REQUEST } from "../utils/mutations";
 import { QUERY_TENANT, QUERY_PROPERTY } from "../utils/queries";
 import RequestSuccess from "./RequestSuccess";
+import { useStoreContext } from "../utils/GlobalState";
+import { SET_PROPERTIES } from "../utils/actions";
 
 const TenantDashboard = () => {
+  const [state, dispatch] = useStoreContext();
+  const { propertiesData } = state;
+  const { data: propertyData } = useQuery(QUERY_PROPERTIES);
+  console.log(propertiesData, "propertyData");
+  useEffect(() => {
+    if (propertyData) {
+      dispatch({
+        type: SET_PROPERTIES,
+        payload: propertyData.propertiesData,
+      });
+    }
+  }
+  , [propertyData, dispatch]);
+
+
   const [showHiddenComponent, setShowHiddenComponent] = useState(false);
   const { loading, error, data } = useQuery(QUERY_PROPERTIES);
-  console.log(data, "data");
   const [attachTenant, { error: errorAttachTenant }] =
     useMutation(ATTACH_TENANT);
   const [addRequest, { error: errorRequest }] = useMutation(ADD_REQUEST);
@@ -23,7 +39,6 @@ const TenantDashboard = () => {
     error: errorTenant,
     data: dataTenant,
   } = useQuery(QUERY_TENANT);
-  console.log(dataTenant, "dataTenant");
   const [getPropertyId, setGetPropertyId] = useState({
     propertyId: "",
   });
@@ -49,8 +64,6 @@ const TenantDashboard = () => {
     unitNumber: "",
     moreInfo: "",
   });
-
-  console.log(request);
 
   const handleChangeRequest = (event) => {
     const { name, value } = event.target;
@@ -93,8 +106,6 @@ const TenantDashboard = () => {
       [name]: value,
     });
   };
-
-  console.log(getPropertyId);
 
   // submit form
   const handleFormSubmit = async (event) => {
@@ -200,10 +211,10 @@ const TenantDashboard = () => {
                           Your Building is
                         </h1>
                         <p className="text-gray-300 dark:text-gray-100 text-xl tracking-normal font-normal mb-2">
-                            {loadingTenant
-                              ? "Loading..."
-                              : tenantProperty[0]?.name}
-                          </p>
+                          {loadingTenant
+                            ? "Loading..."
+                            : tenantProperty[0]?.name}
+                        </p>
                         <p className=" text-gray-300">
                           <p className="flex text-gray-300 dark:text-gray-100 text-sm tracking-normal font-normal mb-3 text-center">
                             {loadingTenant
